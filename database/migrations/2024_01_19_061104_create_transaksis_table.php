@@ -35,13 +35,13 @@ return new class extends Migration
             $table->string('nama_sampah', 50);
 
             // Kolom total_berat akan menyimpan total berat sampah dalam transaksi (maksimal 11 digit)
-            $table->integer('total_berat', 11);
+            $table->integer('total_berat');
 
             // Kolom total_harga akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
-            $table->integer('total_harga', 11);
+            $table->integer('total_harga');
 
             // Kolom status akan digunakan untuk mengidentifikasi status transaksi (1: Aktif, 0: Nonaktif)
-            $table->integer('status', 1);
+            $table->integer('status');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

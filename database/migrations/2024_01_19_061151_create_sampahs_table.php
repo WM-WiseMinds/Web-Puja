@@ -26,13 +26,13 @@ return new class extends Migration
             $table->string('nama_sampah', 50);
 
             // Kolom harga_sampah akan menyimpan harga per unit sampah (maksimal 11 digit)
-            $table->integer('harga_sampah', 11);
+            $table->integer('harga_sampah');
 
             // Kolom jumlah_sampah akan menyimpan jumlah sampah yang terjual (maksimal 11 digit)
-            $table->integer('jumlah_sampah', 11);
+            $table->integer('jumlah_sampah');
 
             // Kolom total_sampah akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
-            $table->integer('total_sampah', 11);
+            $table->integer('total_sampah');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

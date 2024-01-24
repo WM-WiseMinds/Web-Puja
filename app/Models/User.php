@@ -25,7 +25,6 @@ class User extends Authenticatable
      */
 
     // protected $table di gunakan untuk menyimpan nama tabel yang sesuai dalam basis data;     
-    protected $table = "user";
 
     //  protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel user
     protected $fillable = [
@@ -76,7 +75,7 @@ class User extends Authenticatable
     public function role()
     {
         //belongsTo digunakan karena relasi yang di tuju oleh user adalah tabel Roles bisa di bilang relasi antara model Roles dengan model User adalah One To Many
-        return $this->belongsTo(Roles::class);
+        return $this->belongsTo(Roles::class, 'role_id');
     }
 
     // Relasi antara model User dengan model Admin (Satu user memiliki satu admin)

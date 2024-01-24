@@ -44,7 +44,7 @@ return new class extends Migration
             $table->string('password', 20);
 
             // Kolom status akan digunakan untuk mengidentifikasi status nasabah (1: Aktif, 0: Nonaktif)
-            $table->integer('status', 1);
+            $table->integer('status');
 
            // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

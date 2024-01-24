@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('nama_barang', 128);
 
             // Kolom harga_barang akan menyimpan harga barang (maksimal 11 digit)
-            $table->integer('harga_barang', 11);
+            $table->integer('harga_barang');
 
             // Kolom jumlah_barang akan menyimpan jumlah barang yang tersedia (maksimal 11 digit)
-            $table->integer('jumlah_barang', 11);
+            $table->integer('jumlah_barang');
 
             // Kolom gambar_barang akan menyimpan nama file gambar barang (maksimal 128 karakter)
             $table->string('gambar_barang', 128);
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('keterangan', 225);
 
             // Kolom status akan digunakan untuk mengidentifikasi status barang (1: Aktif, 0: Nonaktif)
-            $table->integer('status', 1);
+            $table->integer('status');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

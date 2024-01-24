@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('roles_permissions', function (Blueprint $table) {
             // Menghubungkan kolom role_id dengan tabel 'role' 
-            $table->foreignId('role_id')->constrained('role');
+            $table->foreignId('role_id')->constrained('roles');
             
             // Menghubungkan kolom permission_id dengan tabel 'permission'
-            $table->foreignId('permission_id')->constrained('permission');
+            $table->foreignId('permissions_id')->constrained('permissions');
         });
     }
 

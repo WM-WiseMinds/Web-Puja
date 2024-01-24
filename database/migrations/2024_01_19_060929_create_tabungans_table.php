@@ -26,19 +26,19 @@ return new class extends Migration
             $table->date('tanggal');
 
             // Kolom debit akan menyimpan nilai transaksi debit (maksimal 11 digit)
-            $table->integer('debit', 11);
+            $table->integer('debit');
 
             // Kolom kredit akan menyimpan nilai transaksi kredit (maksimal 11 digit)
-            $table->integer('kredit', 11);
+            $table->integer('kredit');
 
             // Kolom saldo akan menyimpan saldo setelah transaksi (maksimal 11 digit)
-            $table->integer('saldo', 11);
+            $table->integer('saldo');
 
             // Kolom keterangan akan menyimpan keterangan transaksi (maksimal 128 karakter)
             $table->string('keterangan', 128);
 
             // Kolom status akan digunakan untuk mengidentifikasi status transaksi (1: Aktif, 0: Nonaktif)
-            $table->integer('status', 1);
+            $table->integer('status');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();
