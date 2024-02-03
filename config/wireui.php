@@ -79,14 +79,14 @@ return [
         //     'class' => Components\Input::class,
         //     'alias' => 'input',
         // ],
-        'textarea' => [
-            'class' => Components\Textarea::class,
-            'alias' => 'textarea',
-        ],
-        'label' => [
-            'class' => Components\Label::class,
-            'alias' => 'label',
-        ],
+        // 'textarea' => [
+        //     'class' => Components\Textarea::class,
+        //     'alias' => 'textarea',
+        // ],
+        // 'label' => [
+        //     'class' => Components\Label::class,
+        //     'alias' => 'label',
+        // ],
         'error' => [
             'class' => Components\Error::class,
             'alias' => 'error',
