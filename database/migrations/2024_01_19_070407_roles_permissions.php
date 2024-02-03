@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles_permissions', function (Blueprint $table) {
+        Schema::create('role_permissions', function (Blueprint $table) {
             // Menghubungkan kolom role_id dengan tabel 'role' 
             $table->foreignId('role_id')->constrained('roles');
-            
+
             // Menghubungkan kolom permission_id dengan tabel 'permission'
-            $table->foreignId('permissions_id')->constrained('permissions');
+            $table->foreignId('permission_id')->constrained('permissions');
         });
     }
 

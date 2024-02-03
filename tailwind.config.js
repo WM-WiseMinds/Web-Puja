@@ -32,6 +32,7 @@ export default {
             },
             colors: {
                 "pg-primary": colors.gray,
+                emerald: colors.emerald,
             },
         },
     },
