@@ -46,19 +46,16 @@
                         <span class="ml-4">Roles</span>
                     </x-nav-link>
                 </li>
-
-                <li class="relative px-6 py-3">
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                        aria-hidden="true"></span>
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
-                        class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100">
-                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                            <path
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                            </path>
+                <li
+                    class="relative px-6 py-3 {{ request()->routeIs('users') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                    <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')"
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('users') ? 'text-green-700' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path fill-rule="evenodd"
+                                d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                                clip-rule="evenodd" />
                         </svg>
-                        <span class="ml-4">User</span>
+                        <span class="ml-4">Users</span>
                     </x-nav-link>
                 </li>
                 <li class="relative px-6 py-3">
