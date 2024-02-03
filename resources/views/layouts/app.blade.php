@@ -118,16 +118,10 @@
     </div>
 
     @stack('modals')
+    @livewire('wire-elements-modal')
 
+    @wireUiScripts
     @livewireScripts
 </body>
-
-<script>
-    document.addEventListener('alpine:init', function() {
-        Alpine.store('navbar', {
-            open: false,
-        });
-    });
-</script>
 
 </html>
