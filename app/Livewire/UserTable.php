@@ -45,7 +45,8 @@ final class UserTable extends PowerGridComponent
                 'users.id', // Pilih kolom yang Anda butuhkan dari tabel 'users'
                 'users.name',
                 'users.email',
-                'users.created_at',
+                'users.no_hp',
+                'users.status',
                 'roles.name as role_name', // Alias untuk 'name' dari tabel 'roles'
             ])->orderBy('users.id', 'asc');
     }
@@ -56,14 +57,15 @@ final class UserTable extends PowerGridComponent
         return [];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('email')
-            ->addColumn('role')
-            ->addColumn('created_at');
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('name')
+            ->add('email')
+            ->add('no_hp')
+            ->add('status')
+            ->add('role');
     }
 
     public function columns(): array
@@ -79,12 +81,15 @@ final class UserTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make(__('Role'), 'role_name')
+            Column::make('No HP', 'no_hp')
                 ->sortable(),
 
-            Column::make('Created at', 'created_at')
+            Column::make('Status', 'status')
                 ->sortable()
                 ->searchable(),
+
+            Column::make('Role', 'role_name')
+                ->sortable(),
 
             Column::action('Action')
         ];
