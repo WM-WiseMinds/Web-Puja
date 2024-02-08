@@ -12,15 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         // Membuat tabel 'tabungans' untuk mencatat transaksi tabungan
-        Schema::create('tabungans', function (Blueprint $table) {
+        Schema::create('tabungan', function (Blueprint $table) {
             // Kolom id akan digunakan sebagai primary key
             $table->id();
 
             // Kolom nasabah_id adalah foreign key yang terhubung ke tabel 'nasabahs' dengan opsi nullable (bisa kosong)
-            $table->foreignId('nasabah_id')->constrained('nasabahs')->nullable();
-
-            // Kolom nama_nasabah akan menyimpan nama nasabah (maksimal 128 karakter)
-            $table->string('nama_nasabah', 128);
+            $table->foreignId('nasabah_id')->constrained('nasabah')->nullable();
 
             // Kolom tanggal akan menyimpan tanggal transaksi
             $table->date('tanggal');

@@ -14,24 +14,15 @@ return new class extends Migration
     public function up(): void
     {
         // Membuat tabel 'penukarans' untuk mencatat transaksi penukaran barang
-        Schema::create('penukarans', function (Blueprint $table) {
+        Schema::create('penukaran', function (Blueprint $table) {
             // Kolom id akan digunakan sebagai primary key
             $table->id();
 
-            // Kolom tabungan_id adalah foreign key yang terhubung ke tabel 'tabungans' dan akan melakukan cascade delete
-            $table->foreignId('tabungan_id')->constrained('tabungans')->OnDelete('cascade');
+            // Kolom tabungan_id adalah foreign key yang terhubung ke tabel 'tabungan' dan akan melakukan cascade delete
+            $table->foreignId('tabungan_id')->constrained('tabungan')->OnDelete('cascade');
 
-            // Kolom barang_id adalah foreign key yang terhubung ke tabel 'barangs' dan akan melakukan cascade delete
-            $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade');
-
-            // Kolom nama_barang akan menyimpan nama barang (maksimal 128 karakter)
-            $table->string('nama_barang', 128);
-
-            // Kolom jumlah_barang akan menyimpan jumlah barang yang ditukar (maksimal 11 digit)
-            $table->integer('jumlah_barang');
-
-            // Kolom keterangan akan menyimpan keterangan transaksi (maksimal 128 karakter)
-            $table->string('keterangan', 128);
+            // Kolom barang_id adalah foreign key yang terhubung ke tabel 'barang' dan akan melakukan cascade delete
+            $table->foreignId('barang_id')->constrained('barang')->onDelete('cascade');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

@@ -12,12 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         // Membuat tabel 'sampahs' untuk mencatat informasi sampah dalam sebuah transaksi
-        Schema::create('sampahs', function (Blueprint $table) {
+        Schema::create('sampah', function (Blueprint $table) {
             // Kolom id akan digunakan sebagai primary key
             $table->id();
-
-            // Kolom transaksi_id adalah foreign key yang terhubung ke tabel 'transaksis' dan akan melakukan cascade delete
-            $table->foreignId('transaksi_id')->constrained('transaksis')->cascadeOnDelete();
 
             // Kolom jenis_sampah akan menyimpan jenis sampah (maksimal 50 karakter)
             $table->string('jenis_sampah', 50);

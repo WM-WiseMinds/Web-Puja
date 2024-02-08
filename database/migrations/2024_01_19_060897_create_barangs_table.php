@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         // Membuat tabel 'barangs' untuk menyimpan informasi tentang barang-barang
-        Schema::create('barangs', function (Blueprint $table) {
+        Schema::create('barang', function (Blueprint $table) {
             // Kolom id akan digunakan sebagai primary key
             $table->id();
 
@@ -22,8 +22,8 @@ return new class extends Migration
             // Kolom harga_barang akan menyimpan harga barang (maksimal 11 digit)
             $table->integer('harga_barang');
 
-            // Kolom jumlah_barang akan menyimpan jumlah barang yang tersedia (maksimal 11 digit)
-            $table->integer('jumlah_barang');
+            // Kolom stok_barang akan menyimpan jumlah barang yang tersedia (maksimal 11 digit)
+            $table->integer('stok_barang');
 
             // Kolom gambar_barang akan menyimpan nama file gambar barang (maksimal 128 karakter)
             $table->string('gambar_barang', 128);
