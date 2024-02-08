@@ -10,7 +10,7 @@ use LivewireUI\Modal\ModalComponent;
 
 class UserForm extends ModalComponent
 {
-    public $user, $name, $email, $password, $password_confirmation, $user_id, $roles, $role_id;
+    public $user, $name, $email, $password, $password_confirmation, $user_id, $roles, $role_id, $no_hp, $status;
 
     public function render()
     {
@@ -26,6 +26,8 @@ class UserForm extends ModalComponent
         $this->password = '';
         $this->password_confirmation = '';
         $this->role_id = '';
+        $this->no_hp = '';
+        $this->status = '';
     }
 
     public function store()
@@ -34,6 +36,8 @@ class UserForm extends ModalComponent
             'name' => 'required|min:3',
             'role_id' => 'required',
             'password' => 'required|min:6|confirmed',
+            'no_hp' => 'required',
+            'status' => 'required',
         ];
 
         if ($this->user_id) {
@@ -53,6 +57,7 @@ class UserForm extends ModalComponent
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
                 'role_id' => $this->role_id,
+                'no_hp' => $this->no_hp,
             ]);
         } else {
             $user = User::create([
@@ -60,10 +65,9 @@ class UserForm extends ModalComponent
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
                 'role_id' => $this->role_id,
+                'no_hp' => $this->no_hp,
             ]);
         }
-
-        session()->flash('message', $this->user ? 'User updated.' : 'User created.');
 
         $this->closeModalWithEvents([
             UserTable::class => 'userUpdated',
@@ -81,6 +85,8 @@ class UserForm extends ModalComponent
             $this->name = $this->user->name;
             $this->email = $this->user->email;
             $this->role_id = $this->user->role_id;
+            $this->no_hp = $this->user->no_hp;
+            $this->status = $this->user->status;
         }
     }
 }
