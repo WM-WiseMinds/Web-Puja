@@ -9,14 +9,13 @@ class Tabungan extends Model
 {
     //use HasFactory untuk mengaktifkan fitur factory pada model
     use HasFactory;
-    
+
     //Protected $table di gunakan untuk menyimpan nama tabel yang sesuai dalam basis data
     protected $table = "tabungan";
-    
+
     //protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel tabungan
     protected $fillable = [
         'nasabah_id',
-        'nama_nasabah',
         'tanggal',
         'debit',
         'kredit',

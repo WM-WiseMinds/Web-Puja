@@ -16,9 +16,6 @@ class Penukaran extends Model
     protected $fillable = [
         'tabungan_id',
         'barang_id',
-        'nama_barang',
-        'jumlah_barang',
-        'keterangan',
     ];
 
     public function barang()
@@ -32,5 +29,4 @@ class Penukaran extends Model
         // belongsTo digunakan karena relasi yang di tuju oleh tabungan adalah tabel penukaran bisa di bilang relasi antara model Tabungan dengan model Penukaran adalah One To Many
         return $this->belongsTo(Tabungan::class, 'tabungan_id');
     }
-    
 }

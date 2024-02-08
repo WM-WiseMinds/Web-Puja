@@ -17,9 +17,8 @@ class Transaksi extends Model
     protected $fillable = [
         'admin_id',
         'nasabah_id',
+        'sampah_id',
         'tgl_transaksi',
-        'jenis_sampah',
-        'nama_sampah',
         'total_berat',
         'total_harga',
         'status',
@@ -42,7 +41,7 @@ class Transaksi extends Model
     // Relasi antara model Transaksi dengan model Sampah (Satu transaksi memiliki banyak sampah)
     public function sampah()
     {
-        //hasMany digunakan karena relasi antara model Transaksi dengan model Sampah adalah One To Many
-        return $this->hasMany(Sampah::class, 'sampah_id');
+        //belongsTo digunakan karena relasi antara model Transaksi dengan model Sampah adalah One To Many
+        return $this->belongsTo(Sampah::class, 'sampah_id');
     }
 }

@@ -22,14 +22,11 @@ return new class extends Migration
             // Kolom alamat akan menyimpan alamat nasabah (maksimal 128 karakter)
             $table->string('alamat', 128);
 
-            // Kolom no_hp akan menyimpan nomor telepon nasabah (maksimal 20 karakter)
-            $table->string('no_hp', 20);
-
             // Kolom jenis_kelamin akan menyimpan jenis kelamin nasabah (maksimal 20 karakter)
             $table->string('jenis_kelamin', 20);
 
-            // Kolom status akan digunakan untuk mengidentifikasi status nasabah (1: Aktif, 0: Nonaktif)
-            $table->integer('status');
+            // Kolom status akan digunakan untuk mengidentifikasi status nasabah
+            $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

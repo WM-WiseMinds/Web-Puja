@@ -13,14 +13,9 @@ class Nasabah extends Model
     protected $table = "nasabah";
     //  protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel nasabah
     protected $fillable = [
-        'nama_nasabah',
+        'user_id',
         'alamat',
-        'no_hp',
-        'email',
         'jenis_kelamin',
-        'foto',
-        'username',
-        'password',
         'status',
     ];
     // Relasi antara model Nasabah dengan model Transaksi (Satu nasabah memiliki banyak transaksi)
@@ -33,7 +28,7 @@ class Nasabah extends Model
     public function tabungan()
     {
         // HasMany digunakan karena relasi antara model Nasabah dengan model Tabungan adalah One To Many
-        return $this->hasMany(Tabungan ::class);
+        return $this->hasMany(Tabungan::class);
     }
 
     // Relasi antara model Nasabah dengan model User (Satu nasabah memiliki satu user)

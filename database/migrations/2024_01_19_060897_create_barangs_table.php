@@ -31,8 +31,8 @@ return new class extends Migration
             // Kolom keterangan akan menyimpan deskripsi atau keterangan barang (maksimal 225 karakter)
             $table->string('keterangan', 225);
 
-            // Kolom status akan digunakan untuk mengidentifikasi status barang (1: Aktif, 0: Nonaktif)
-            $table->integer('status');
+            // Kolom status akan digunakan untuk mengidentifikasi status barang
+            $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

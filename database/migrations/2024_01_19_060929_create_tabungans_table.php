@@ -34,8 +34,8 @@ return new class extends Migration
             // Kolom keterangan akan menyimpan keterangan transaksi (maksimal 128 karakter)
             $table->string('keterangan', 128);
 
-            // Kolom status akan digunakan untuk mengidentifikasi status transaksi (1: Aktif, 0: Nonaktif)
-            $table->integer('status');
+            // Kolom status akan digunakan untuk mengidentifikasi status transaksi
+            $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

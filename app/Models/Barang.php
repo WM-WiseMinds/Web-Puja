@@ -16,7 +16,7 @@ class Barang extends Model
     protected $fillable = [
         'nama_barang',
         'harga_barang',
-        'jumlah_barang',
+        'stok_barang',
         'gambar_barang',
         'keterangan',
         'status',
@@ -27,6 +27,4 @@ class Barang extends Model
         // HasMany digunakan karena relasi antara model Barang dengan model Penukaran adalah One To Many
         return $this->hasMany(Penukaran::class);
     }
-
-
 }

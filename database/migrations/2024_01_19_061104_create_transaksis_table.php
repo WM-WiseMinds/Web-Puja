@@ -34,8 +34,8 @@ return new class extends Migration
             // Kolom total_harga akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
             $table->integer('total_harga');
 
-            // Kolom status akan digunakan untuk mengidentifikasi status transaksi (1: Aktif, 0: Nonaktif)
-            $table->integer('status');
+            // Kolom status akan digunakan untuk mengidentifikasi status transaksi
+            $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

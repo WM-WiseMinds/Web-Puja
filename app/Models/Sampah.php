@@ -13,7 +13,6 @@ class Sampah extends Model
     protected $table = "sampah";
     //  protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel sampah
     protected $fillable = [
-        'transaksi_id',
         'jenis_sampah',
         'nama_sampah',
         'harga_sampah',
@@ -23,7 +22,7 @@ class Sampah extends Model
     // Relasi antara model Sampah dengan model Transaksi (Satu sampah memiliki banyak transaksi)
     public function transaksi()
     {
-        // belongsTo digunakan karena relasi yang di tuju oleh transaksi adalah tabel Sampah bisa di bilang relasi antara model Sampah dengan model Transaksi adalah One To Many
-        return $this->belongsTo(Transaksi::class);
+        // hasMany digunakan karena relasi yang di tuju oleh transaksi adalah tabel Sampah bisa di bilang relasi antara model Sampah dengan model Transaksi adalah One To Many
+        return $this->hasMany(Transaksi::class);
     }
 }
