@@ -1,5 +1,5 @@
 <div>
-    <h2>Permissions Table</h2>
+    <h2>Tabel User</h2>
     <table style="width: 100%; border-collapse: collapse;">
         <thead>
             <tr>
@@ -7,7 +7,8 @@
                 <th style="border: 1px solid black; padding: 5px; text-align: left;">Nama</th>
                 <th style="border: 1px solid black; padding: 5px; text-align: left;">Email</th>
                 <th style="border: 1px solid black; padding: 5px; text-align: left;">Role Name</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Created At</th>
+                <th style="border: 1px solid black; padding: 5px; text-align: left;">No HP</th>
+                <th style="border: 1px solid black; padding: 5px; text-align: left;">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -22,7 +23,10 @@
                         {{ $user->role_name }}
                     </td>
                     <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                        {{ $user->created_at }}
+                        {{ $user->no_hp }}
+                    </td>
+                    <td style="border: 1px solid black; padding: 5px; text-align: left;">
+                        {{ $user->status }}
                     </td>
                 </tr>
             @endforeach

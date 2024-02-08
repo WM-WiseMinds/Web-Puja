@@ -22,6 +22,8 @@
 <body class="font-sans antialiased">
     <x-banner />
 
+    <x-toaster-hub />
+
     <div class="flex h-screen bg-gray-100" x-data="{ open: false }">
         @livewire('navigation-menu')
 
