@@ -37,4 +37,8 @@ Route::middleware([
     Route::get('/users', function () {
         return view('users');
     })->name('users');
+
+    Route::get('/nasabah', function () {
+        return view('nasabah');
+    })->name('nasabah');
 });
