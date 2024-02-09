@@ -22,9 +22,6 @@ return new class extends Migration
             // Kolom nasabah_id adalah foreign key yang terhubung ke tabel 'nasabah' dengan opsi onDelete cascade
             $table->foreignId('nasabah_id')->constrained('nasabah')->onDelete('cascade');
 
-            // Kolom sampah_id adalah foreign key yang terhubung ke tabel 'sampah' dengan opsi onDelete cascade
-            $table->foreignId('sampah_id')->constrained('sampah')->onDelete('cascade');
-
             // Kolom tgl_transaksi akan menyimpan tanggal transaksi
             $table->date('tgl_transaksi');
 
