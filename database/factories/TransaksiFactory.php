@@ -19,7 +19,6 @@ class TransaksiFactory extends Factory
         return [
             'user_id' => $this->faker->numberBetween(1, 10),
             'nasabah_id' => $this->faker->numberBetween(1, 10),
-            'tgl_transaksi' => $this->faker->date(),
             'total_sampah' => $this->faker->numberBetween(1, 100),
             'total_berat' => $this->faker->numberBetween(1, 100),
             'total_harga' => $this->faker->numberBetween(1000, 1000000),
