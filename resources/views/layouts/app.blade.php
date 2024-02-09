@@ -24,7 +24,7 @@
 
     <x-toaster-hub />
 
-    <div class="flex h-screen bg-gray-100" x-data="{ open: false }">
+    <div class="flex overflow-x-auto h-screen bg-gray-100" x-data="{ open: false }">
         @livewire('navigation-menu')
 
         <!-- Page Heading -->

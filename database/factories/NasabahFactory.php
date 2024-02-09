@@ -21,6 +21,7 @@ class NasabahFactory extends Factory
             'alamat' => $this->faker->address,
             'no_hp' => $this->faker->phoneNumber,
             'jenis_kelamin' => $this->faker->title,
+            'foto' => $this->faker->imageUrl(),
             'status' => $this->faker->randomElement(['Aktif', 'Nonaktif']),
         ];
     }

@@ -48,7 +48,7 @@
                     <select wire:model="role_id"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="exampleFormControlInput4">
-                        <option value="">Choose Role</option>
+                        <option value="">Pilih Role</option>
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}">{{ $role->name }}</option>
                         @endforeach

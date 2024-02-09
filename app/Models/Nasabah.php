@@ -17,6 +17,7 @@ class Nasabah extends Model
         'alamat',
         'no_hp',
         'jenis_kelamin',
+        'foto',
         'status',
     ];
     // Relasi antara model Nasabah dengan model Transaksi (Satu nasabah memiliki banyak transaksi)

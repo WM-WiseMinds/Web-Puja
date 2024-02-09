@@ -28,6 +28,9 @@ return new class extends Migration
             // Kolom jenis_kelamin akan menyimpan jenis kelamin nasabah (maksimal 20 karakter)
             $table->string('jenis_kelamin', 20);
 
+            // Kolom foto akan menyimpan jenis kelamin nasabah (maksimal 255 karakter)
+            $table->string('foto', 255);
+
             // Kolom status akan digunakan untuk mengidentifikasi status nasabah
             $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
 
