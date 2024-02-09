@@ -5,15 +5,13 @@ namespace App\Livewire;
 use App\Models\Roles;
 use App\Models\User;
 use Illuminate\Validation\Rule;
-use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
 use Masmerise\Toaster\Toastable;
 
 class UserForm extends ModalComponent
 {
     use Toastable;
-
-    public $user, $name, $email, $password, $password_confirmation, $user_id, $roles, $role_id, $status;
+    public $user, $name, $email, $password, $password_confirmation, $user_id, $roles, $role_id, $no_hp, $status;
 
     public function render()
     {
@@ -24,12 +22,7 @@ class UserForm extends ModalComponent
 
     public function resetCreateForm()
     {
-        $this->name = '';
-        $this->email = '';
-        $this->password = '';
-        $this->password_confirmation = '';
-        $this->role_id = '';
-        $this->status = '';
+        $this->reset(['name', 'email', 'password', 'password_confirmation', 'role_id', 'status']);
     }
 
     public function store()
@@ -58,6 +51,7 @@ class UserForm extends ModalComponent
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
                 'role_id' => $this->role_id,
+                'status' => $this->status,
             ]);
 
             $this->success('User berhasil diupdate');
@@ -67,11 +61,11 @@ class UserForm extends ModalComponent
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
                 'role_id' => $this->role_id,
+                'status' => $this->status,
             ]);
 
-            $this->success('User berhasil disimpan');
+            $this->success('User berhasil ditambahkan');
         }
-
 
         $this->closeModalWithEvents([
             UserTable::class => 'userUpdated',
