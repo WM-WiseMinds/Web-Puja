@@ -6,9 +6,12 @@ use App\Models\Permissions;
 use App\Models\Roles;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Masmerise\Toaster\Toastable;
 
 class RolesForm extends ModalComponent
 {
+    use Toastable;
+
     public $roles, $id, $name, $permissions;
     public $permissions_id = [];
 
@@ -38,14 +41,16 @@ class RolesForm extends ModalComponent
                 'name' => $this->name,
             ]);
             $role->permissions()->sync($this->permissions_id);
+
+            $this->success('Roles berhasil diupdate');
         } else {
             $role = Roles::create([
                 'name' => $this->name,
             ]);
             $role->permissions()->attach($this->permissions_id);
-        }
 
-        session()->flash('message', $this->roles ? 'Roles updated.' : 'Roles created.');
+            $this->success('Roles berhasil ditambahkan');
+        }
 
         $this->closeModalWithEvents([
             RolesTable::class => 'rolesUpdated',

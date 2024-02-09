@@ -22,7 +22,9 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div class="flex h-screen bg-gray-100" x-data="{ open: false }">
+    <x-toaster-hub />
+
+    <div class="flex overflow-x-auto h-screen bg-gray-100" x-data="{ open: false }">
         @livewire('navigation-menu')
 
         <!-- Page Heading -->

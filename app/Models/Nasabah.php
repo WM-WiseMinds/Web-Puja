@@ -15,7 +15,9 @@ class Nasabah extends Model
     protected $fillable = [
         'user_id',
         'alamat',
+        'no_hp',
         'jenis_kelamin',
+        'foto',
         'status',
     ];
     // Relasi antara model Nasabah dengan model Transaksi (Satu nasabah memiliki banyak transaksi)

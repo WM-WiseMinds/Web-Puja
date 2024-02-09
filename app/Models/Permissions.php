@@ -22,6 +22,6 @@ class Permissions extends Model
     public function roles()
     {
         // belongsToMany digunakan karena relasi antara model Permissions dengan model Roles adalah Many To Many
-        return $this->belongsToMany(Roles::class, 'roles_permissions', 'permissions_id', 'role_id');
+        return $this->belongsToMany(Roles::class, 'role_permissions', 'permission_id', 'role_id');
     }
 }

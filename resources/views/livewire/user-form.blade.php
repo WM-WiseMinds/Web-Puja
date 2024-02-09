@@ -48,12 +48,26 @@
                     <select wire:model="role_id"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="exampleFormControlInput4">
-                        <option value="">Choose Role</option>
+                        <option value="">Pilih Role</option>
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}">{{ $role->name }}</option>
                         @endforeach
                     </select>
                     @error('role_id')
+                        <span class="text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
+                    <select wire:model="status"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="status">
+                        <option value="">Pilih Status</option>
+                        <option value="Aktif">Aktif</option>
+                        <option value="Nonaktif">Nonaktif</option>
+                    </select>
+                    @error('status')
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>

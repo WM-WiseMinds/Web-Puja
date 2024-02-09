@@ -32,6 +32,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'status',
     ];
 
     /**
@@ -53,8 +54,8 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    
-     // protected $casts di gunakan untuk mengubah tipe data dari atribut yang ada pada tabel user
+
+    // protected $casts di gunakan untuk mengubah tipe data dari atribut yang ada pada tabel user
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -65,7 +66,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
-     // protected $appends di gunakan untuk menambahkan atribut yang ada pada tabel user
+    // protected $appends di gunakan untuk menambahkan atribut yang ada pada tabel user
     protected $appends = [
         'profile_photo_url',
     ];
@@ -83,7 +84,6 @@ class User extends Authenticatable
     {
         //hasOne digunakan karena relasi yang di tuju oleh user adalah tabel Admin bisa di bilang relasi antara model Admin dengan model User adalah One To one
         return $this->hasOne(Admin::class);
-
     }
     // Relasi antara model User dengan model Nasabah (Satu user memiliki satu nasabah)    
     public function nasabah()
