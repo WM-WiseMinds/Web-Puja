@@ -3,11 +3,13 @@
 namespace App\Livewire;
 
 use App\Models\Transaksi;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Footer;
@@ -34,6 +36,9 @@ final class TransaksiTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->view('details.transaksi-detail')
+                ->showCollapseIcon()
         ];
     }
 
@@ -52,6 +57,8 @@ final class TransaksiTable extends PowerGridComponent
                 'transaksi.total_harga',
                 'transaksi.status',
                 'transaksi.created_at',
+                'users.name as user_name',
+                'nasabah.user_id as nasabah_user_id',
                 'nasabah_user.name as name',
                 'nasabah.alamat as alamat',
                 'nasabah.no_hp as no_hp',
@@ -61,8 +68,10 @@ final class TransaksiTable extends PowerGridComponent
     public function relationSearch(): array
     {
         return [
-            'nasabah' => ['alamat', 'no_hp'],
-            'user' => ['name'],
+            'nasabah' => [
+                'alamat', 'no_hp',
+            ],
+            'nasabah.user' => ['name'],
         ];
     }
 
@@ -70,6 +79,7 @@ final class TransaksiTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('nasabah_user_id')
             ->add('name')
             ->add('total_harga_formatted', fn (Transaksi $model) => 'Rp ' . number_format($model->total_harga, 0, ',', '.'))
             ->add('status')
@@ -80,7 +90,7 @@ final class TransaksiTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Nama', 'name'),
+            Column::make('Nama Nasabah', 'name'),
 
             Column::make('Total harga', 'total_harga_formatted', 'total_harga')
                 ->sortable()
@@ -100,9 +110,9 @@ final class TransaksiTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::select('name', 'transaksi.user_id')
-                ->dataSource(Transaksi::with('user')->get()->map(function ($transaksi) {
-                    return ['id' => $transaksi->user_id, 'name' => $transaksi->user->name];
+            Filter::select('name', 'nasabah.user_id')
+                ->dataSource(Transaksi::with('nasabah.user')->get()->map(function ($transaksi) {
+                    return ['id' => $transaksi->nasabah->user_id, 'name' => $transaksi->nasabah->user->name];
                 })->unique('id'))
                 ->optionValue('id')
                 ->optionLabel('name'),
