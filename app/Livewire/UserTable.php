@@ -6,6 +6,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -21,6 +22,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 final class UserTable extends PowerGridComponent
 {
     use WithExport;
+    use Toastable;
 
     public function setUp(): array
     {
@@ -45,7 +47,6 @@ final class UserTable extends PowerGridComponent
                 'users.id', // Pilih kolom yang Anda butuhkan dari tabel 'users'
                 'users.name',
                 'users.email',
-                'users.no_hp',
                 'users.status',
                 'roles.name as role_name', // Alias untuk 'name' dari tabel 'roles'
             ]);
@@ -65,7 +66,6 @@ final class UserTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
-            ->add('no_hp')
             ->add('role')
             ->add('status');
     }
@@ -82,9 +82,6 @@ final class UserTable extends PowerGridComponent
             Column::make('Email', 'email')
                 ->sortable()
                 ->searchable(),
-
-            Column::make('No HP', 'no_hp')
-                ->sortable(),
 
             Column::make('Role', 'role_name')
                 ->sortable(),
@@ -218,5 +215,6 @@ final class UserTable extends PowerGridComponent
     {
         $user = User::findOrFail($rowId);
         $user->delete();
+        $this->success('User berhasil dihapus');
     }
 }

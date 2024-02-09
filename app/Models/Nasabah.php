@@ -15,6 +15,7 @@ class Nasabah extends Model
     protected $fillable = [
         'user_id',
         'alamat',
+        'no_hp',
         'jenis_kelamin',
         'status',
     ];

@@ -5,9 +5,11 @@ namespace App\Livewire;
 use App\Models\Permissions;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Masmerise\Toaster\Toastable;
 
 class PermissionsForm extends ModalComponent
 {
+    use Toastable;
     public $permissions, $id, $name;
 
     public function render()
@@ -32,13 +34,14 @@ class PermissionsForm extends ModalComponent
             $permissions->update([
                 'name' => $this->name,
             ]);
+            $this->success('Permissions berhasil diupdate');
         } else {
             Permissions::create([
                 'name' => $this->name,
             ]);
+            $this->success('Permissions berhasil ditambahkan');
         }
 
-        session()->flash('message', $this->permissions ? 'Permissions updated.' : 'Permissions created.');
 
         $this->closeModalWithEvents([
             PermissionsTable::class => 'permissionsUpdated',

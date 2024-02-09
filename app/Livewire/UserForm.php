@@ -7,10 +7,13 @@ use App\Models\User;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Masmerise\Toaster\Toastable;
 
 class UserForm extends ModalComponent
 {
-    public $user, $name, $email, $password, $password_confirmation, $user_id, $roles, $role_id, $no_hp, $status;
+    use Toastable;
+
+    public $user, $name, $email, $password, $password_confirmation, $user_id, $roles, $role_id, $status;
 
     public function render()
     {
@@ -26,7 +29,6 @@ class UserForm extends ModalComponent
         $this->password = '';
         $this->password_confirmation = '';
         $this->role_id = '';
-        $this->no_hp = '';
         $this->status = '';
     }
 
@@ -36,7 +38,6 @@ class UserForm extends ModalComponent
             'name' => 'required|min:3',
             'role_id' => 'required',
             'password' => 'required|min:6|confirmed',
-            'no_hp' => 'required',
             'status' => 'required',
         ];
 
@@ -57,17 +58,20 @@ class UserForm extends ModalComponent
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
                 'role_id' => $this->role_id,
-                'no_hp' => $this->no_hp,
             ]);
+
+            $this->success('User berhasil diupdate');
         } else {
             $user = User::create([
                 'name' => $this->name,
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
                 'role_id' => $this->role_id,
-                'no_hp' => $this->no_hp,
             ]);
+
+            $this->success('User berhasil disimpan');
         }
+
 
         $this->closeModalWithEvents([
             UserTable::class => 'userUpdated',
@@ -85,7 +89,6 @@ class UserForm extends ModalComponent
             $this->name = $this->user->name;
             $this->email = $this->user->email;
             $this->role_id = $this->user->role_id;
-            $this->no_hp = $this->user->no_hp;
             $this->status = $this->user->status;
         }
     }

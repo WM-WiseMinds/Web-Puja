@@ -19,6 +19,7 @@ class NasabahFactory extends Factory
         return [
             'user_id' => $this->faker->randomElement([1, 2, 3]),
             'alamat' => $this->faker->address,
+            'no_hp' => $this->faker->phoneNumber,
             'jenis_kelamin' => $this->faker->title,
             'status' => $this->faker->randomElement(['Aktif', 'Nonaktif']),
         ];

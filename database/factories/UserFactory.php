@@ -31,7 +31,6 @@ class UserFactory extends Factory
             'profile_photo_path' => null,
             'current_team_id' => null,
             'role_id' => $this->faker->randomElement([1, 2, 3]),
-            'no_hp' => $this->faker->phoneNumber(),
             'status' => $this->faker->randomElement(['Aktif', 'Nonaktif']),
         ];
     }
