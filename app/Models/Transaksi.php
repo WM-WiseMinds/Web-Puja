@@ -18,6 +18,7 @@ class Transaksi extends Model
         'admin_id',
         'nasabah_id',
         'tgl_transaksi',
+        'total_sampah',
         'total_berat',
         'total_harga',
         'status',

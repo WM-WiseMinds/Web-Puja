@@ -25,6 +25,9 @@ return new class extends Migration
             // Kolom tgl_transaksi akan menyimpan tanggal transaksi
             $table->date('tgl_transaksi');
 
+            // Kolom total_sampah akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
+            $table->integer('total_sampah');
+
             // Kolom total_berat akan menyimpan total berat sampah dalam transaksi (maksimal 11 digit)
             $table->integer('total_berat');
 

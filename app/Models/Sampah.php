@@ -18,7 +18,6 @@ class Sampah extends Model
         'nama_sampah',
         'harga_sampah',
         'jumlah_sampah',
-        'total_sampah',
     ];
     // Relasi antara model Sampah dengan model Transaksi (Satu sampah memiliki banyak transaksi)
     public function transaksi()
