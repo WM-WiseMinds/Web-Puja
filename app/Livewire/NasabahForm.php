@@ -46,7 +46,7 @@ class NasabahForm extends ModalComponent
 
             // Delete the old photo if it exists
             if ($this->nasabah->foto) {
-                Storage::delete('public/' . $this->nasabah->foto);
+                Storage::disk('public')->delete($this->nasabah->foto);
             }
 
             // Store the new photo

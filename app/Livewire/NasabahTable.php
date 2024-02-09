@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Footer;
@@ -35,6 +36,9 @@ final class NasabahTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->view('details.nasabah-detail')
+                ->showCollapseIcon()
         ];
     }
 
@@ -49,6 +53,7 @@ final class NasabahTable extends PowerGridComponent
                 'nasabah.no_hp',
                 'nasabah.jenis_kelamin',
                 'nasabah.status',
+                'nasabah.foto',
                 'nasabah.created_at',
                 'users.name as name',
             ]);
@@ -66,11 +71,8 @@ final class NasabahTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('alamat')
-            ->add('jenis_kelamin')
             ->add('no_hp')
-            ->add('status')
-            ->add('created_at');
+            ->add('status');
     }
 
     public function columns(): array
@@ -78,19 +80,8 @@ final class NasabahTable extends PowerGridComponent
         return [
             Column::make('Id', 'id'),
             Column::make('Nama', 'name'),
-            Column::make('Alamat', 'alamat')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Jenis kelamin', 'jenis_kelamin')
-                ->sortable()
-                ->searchable(),
 
             Column::make('No Hp', 'no_hp')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Created at', 'created_at')
                 ->sortable()
                 ->searchable(),
 
