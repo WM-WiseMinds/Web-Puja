@@ -17,9 +17,7 @@ class TransaksiForm extends ModalComponent
 
     protected $rules = [
         'nasabah_id' => 'required|exists:nasabah,id',
-        // 'total_sampah' => 'nullable|numeric|min:0',
         'total_berat' => 'required|numeric|min:0',
-        // 'total_harga' => 'nullable|numeric|min:0',
         'status' => 'required',
     ];
 
@@ -48,8 +46,6 @@ class TransaksiForm extends ModalComponent
         $this->closeModalWithEvents([
             TransaksiTable::class => 'transaksiUpdated',
         ]);
-
-        $this->dispatch('openModals');
 
         $this->resetCreateForm();
     }
