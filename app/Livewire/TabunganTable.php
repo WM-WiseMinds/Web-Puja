@@ -52,7 +52,7 @@ final class TabunganTable extends PowerGridComponent
     public function relationSearch(): array
     {
         return [
-            'user' => ['nama'],
+            'nasabah.user' => ['name'],
         ];
     }
 

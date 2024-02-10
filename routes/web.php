@@ -49,4 +49,8 @@ Route::middleware([
     Route::get('/tabungan', function () {
         return view('tabungan');
     })->name('tabungan');
+
+    Route::get('/barang', function () {
+        return view('barang');
+    })->name('barang');
 });

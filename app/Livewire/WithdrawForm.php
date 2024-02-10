@@ -44,10 +44,10 @@ class WithdrawForm extends ModalComponent
         $history->tabungan_id = $this->tabungan->id;
         $history->debit = 0;
         $history->kredit = $validatedData['withdraw'];
-        $history->keterangan = 'Withdraw tabungan';
+        $history->keterangan = 'Tarik tunai tabungan';
         $history->save();
 
-        $this->success('Withdraw tabungan berhasil dilakukan');
+        $this->success('Tarik tunai tabungan berhasil dilakukan');
 
         $this->closeModalWithEvents([
             TabunganTable::class => 'withDrawUpdated'
