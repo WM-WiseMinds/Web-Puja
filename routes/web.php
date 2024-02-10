@@ -45,8 +45,4 @@ Route::middleware([
     Route::get('/transaksi', function () {
         return view('transaksi');
     })->name('transaksi');
-
-    Route::get('/sampah', function () {
-        return view('sampah');
-    })->name('sampah');
 });
