@@ -15,10 +15,9 @@ class Transaksi extends Model
 
     //protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel transaksi
     protected $fillable = [
-        'admin_id',
+        'user_id',
         'nasabah_id',
-        'sampah_id',
-        'tgl_transaksi',
+        'total_sampah',
         'total_berat',
         'total_harga',
         'status',
@@ -32,16 +31,16 @@ class Transaksi extends Model
     }
 
     // Relasi antara model Transaksi dengan model Admin (Satu transaksi memiliki satu admin)
-    public function admin()
+    public function user()
     {
-        // belongsTo digunakan karena relasi yang di tuju oleh Admin adalah tabel transaksi bisa di bilang relasi antara model Transaksi dengan model Admin adalah One To Many
-        return $this->belongsTo(Admin::class, 'admin_id');
+        // belongsTo digunakan karena relasi yang di tuju oleh User adalah tabel transaksi bisa di bilang relasi antara model Transaksi dengan model User adalah One To Many
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Relasi antara model Transaksi dengan model Sampah (Satu transaksi memiliki banyak sampah)
     public function sampah()
     {
-        //belongsTo digunakan karena relasi antara model Transaksi dengan model Sampah adalah One To Many
-        return $this->belongsTo(Sampah::class, 'sampah_id');
+        //hasMany digunakan karena relasi antara model Transaksi dengan model Sampah adalah One To Many
+        return $this->hasMany(Sampah::class, 'transaksi_id');
     }
 }

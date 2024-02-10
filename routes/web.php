@@ -41,4 +41,8 @@ Route::middleware([
     Route::get('/nasabah', function () {
         return view('nasabah');
     })->name('nasabah');
+
+    Route::get('/transaksi', function () {
+        return view('transaksi');
+    })->name('transaksi');
 });
