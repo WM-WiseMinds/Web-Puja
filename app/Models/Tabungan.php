@@ -16,11 +16,7 @@ class Tabungan extends Model
     //protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel tabungan
     protected $fillable = [
         'nasabah_id',
-        'tanggal',
-        'debit',
-        'kredit',
         'saldo',
-        'keterangan',
         'status',
 
     ];
@@ -32,9 +28,48 @@ class Tabungan extends Model
         return $this->belongsTo(Nasabah::class, 'nasabah_id');
     }
 
+    // Relasi antara model Tabungan dengan model Penukaran (Satu tabungan memiliki banyak penukaran)
     public function penukaran()
     {
         //hasMany digunakan karena relasi antara model Tabungan dengan model Penukaran adalah One To Many
         return $this->hasMany(Penukaran::class, 'penukaran_id');
+    }
+
+    // Relasi antara model Tabungan dengan model HistoryTabungan (Satu tabungan memiliki banyak history tabungan)
+    public function historyTabungan()
+    {
+        //hasMany digunakan karena relasi antara model Tabungan dengan model HistoryTabungan adalah One To Many
+        return $this->hasMany(HistoryTabungan::class, 'tabungan_id');
+    }
+
+    /**
+     * Method untuk memperbarui saldo tabungan.
+     *
+     * @param int $jumlah Jumlah uang yang akan ditambahkan atau dikurangi.
+     * @param string $jenis Jenis transaksi, bisa 'debit' atau 'kredit'.
+     * @param string $keterangan Keterangan untuk transaksi.
+     */
+    public function updateSaldo($jumlah, $jenis = 'debit', $keterangan = '')
+    {
+        // Jika jenis transaksi adalah 'debit'
+        if ($jenis === 'debit') {
+            // Menambah jumlah ke saldo
+            $this->saldo += $jumlah;
+        } else {
+            // Jika jenis transaksi adalah 'kredit'
+            // Mengurangi jumlah dari saldo
+            $this->saldo -= $jumlah;
+        }
+
+        // Menyimpan perubahan ke database
+        $this->save();
+
+        // Membuat record baru di tabel history_tabungan
+        $historyTabungan = new HistoryTabungan();
+        $historyTabungan->tabungan_id = $this->id;
+        $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
+        $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
+        $historyTabungan->keterangan = $keterangan;
+        $historyTabungan->save();
     }
 }

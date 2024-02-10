@@ -45,4 +45,12 @@ Route::middleware([
     Route::get('/transaksi', function () {
         return view('transaksi');
     })->name('transaksi');
+
+    Route::get('/tabungan', function () {
+        return view('tabungan');
+    })->name('tabungan');
+
+    Route::get('/barang', function () {
+        return view('barang');
+    })->name('barang');
 });

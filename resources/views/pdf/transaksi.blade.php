@@ -22,7 +22,7 @@
                     <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $transaksi->total_berat }}
                     </td>
                     <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                        Rp{{ number_format($transaksi->total_harga, 0, ',', '.') }}
+                        Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}
                     </td>
                     <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $transaksi->status }}</td>
                 </tr>

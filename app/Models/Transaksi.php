@@ -43,4 +43,16 @@ class Transaksi extends Model
         //hasMany digunakan karena relasi antara model Transaksi dengan model Sampah adalah One To Many
         return $this->hasMany(Sampah::class, 'transaksi_id');
     }
+
+    public function getTotalHargaSampahAttribute()
+    {
+        return $this->sampah->sum(function ($sampah) {
+            return $sampah->jumlah_sampah * $sampah->harga_sampah;
+        });
+    }
+
+    public function getTotalJumlahSampahAttribute()
+    {
+        return $this->sampah->sum('jumlah_sampah');
+    }
 }

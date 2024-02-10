@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Nasabah;
+use App\Models\Tabungan;
 use App\Models\Transaksi;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use LivewireUI\Modal\ModalComponent;
 use Masmerise\Toaster\Toastable;
 
@@ -38,8 +40,22 @@ class TransaksiForm extends ModalComponent
     {
         $validatedData = $this->validate();
         $validatedData['user_id'] = auth()->id();
+
+        // Get the original nasabah_id before the update
+        $originalNasabahId = $this->transaksi->nasabah_id;
+
         $this->transaksi->fill($validatedData);
         $this->transaksi->save();
+
+        // If the nasabah_id has been updated
+        if ($originalNasabahId !== $this->transaksi->nasabah_id) {
+            // Update the nasabah_id in the Tabungan
+            $tabungan = Tabungan::where('nasabah_id', $originalNasabahId)->first();
+            if ($tabungan) {
+                $tabungan->nasabah_id = $this->transaksi->nasabah_id;
+                $tabungan->save();
+            }
+        }
 
         $this->success($this->transaksi->wasRecentlyCreated ? 'Transaksi berhasil ditambahkan' : 'Transaksi berhasil diubah');
 
