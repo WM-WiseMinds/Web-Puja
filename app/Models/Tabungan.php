@@ -72,20 +72,4 @@ class Tabungan extends Model
         $historyTabungan->keterangan = $keterangan;
         $historyTabungan->save();
     }
-
-    // public function calculateSaldo()
-    // {
-    //     $saldo = $this->saldo;
-    //     foreach ($this->historyTabungan as $historyTabungan) {
-    //         $debit = intval($historyTabungan->debit);
-    //         $kredit = intval($historyTabungan->kredit);
-    //         $saldo = $saldo + $debit - $kredit;
-    //         $historyTabungan->saldo = $saldo;
-    //     }
-    // }
-
-    // public function formatRupiah($value)
-    // {
-    //     return 'Rp ' . number_format($value, 0, ',', '.');
-    // }
 }
