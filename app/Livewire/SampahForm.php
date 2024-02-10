@@ -37,7 +37,7 @@ class SampahForm extends ModalComponent
     public function removeSampahItem($index)
     {
         unset($this->sampahItems[$index]);
-        $this->sampahItems = array_values($this->sampahItems); // Reindex array
+        $this->sampahItems = array_values($this->sampahItems);
     }
 
     public function resetCreateForm()
@@ -56,31 +56,63 @@ class SampahForm extends ModalComponent
                 'sampahItems.*.jumlah_sampah' => 'required|numeric|min:0',
             ]);
 
-            $sampah = new Sampah();
-            $sampah->fill($item);
-            $sampah->transaksi_id = $this->transaksi_id;
-            $sampah->save();
+            if ($this->sampah->exists) {
+                // Updating an existing Sampah
+                $this->sampah->update($item);
+                $this->success('Sampah berhasil diubah');
+            } else {
+                // Creating a new Sampah
+                $sampah = new Sampah();
+                $sampah->fill($item);
+                $sampah->transaksi_id = $this->transaksi_id;
+                $sampah->save();
+                $this->success('Sampah berhasil ditambahkan');
+            }
         }
 
-        $this->success($this->transaksi->wasRecentlyCreated ? 'Sampah berhasil ditambahkan' : 'Sampah berhasil diubah');
         $this->closeModalWithEvents([
-            SampahTable::class => 'sampahUpdated',
+            TransaksiTable::class => 'sampahUpdated',
         ]);
 
         $this->resetCreateForm();
     }
 
+    // public function mount($transaksi_id = null, $sampah_id = null)
+    // {
+    //     $this->transaksi_id = $transaksi_id;
+    //     $this->transaksi = Transaksi::all();
+    //     $this->sampah = $sampah_id ? Sampah::find($sampah_id) : new Sampah;
+    //     if ($this->sampah && $this->sampah->exists) {
+    //         $this->transaksi_id = $this->sampah->transaksi_id;
+    //         $this->jenis_sampah = $this->sampah->jenis_sampah;
+    //         $this->nama_sampah = $this->sampah->nama_sampah;
+    //         $this->harga_sampah = $this->sampah->harga_sampah;
+    //         $this->jumlah_sampah = $this->sampah->jumlah_sampah;
+    //     }
+    // }
+
     public function mount($transaksi_id = null, $sampah_id = null)
     {
         $this->transaksi_id = $transaksi_id;
         $this->transaksi = Transaksi::all();
-        $this->sampah = $sampah_id ? Sampah::find($sampah_id) : new Sampah;
-        if ($this->sampah && $this->sampah->exists) {
+
+        if ($sampah_id) {
+            // Editing an existing Sampah
+            $this->sampah = Sampah::find($sampah_id);
+            $this->sampahItems = [
+                [
+                    'jenis_sampah' => $this->sampah->jenis_sampah,
+                    'nama_sampah' => $this->sampah->nama_sampah,
+                    'harga_sampah' => $this->sampah->harga_sampah,
+                    'jumlah_sampah' => $this->sampah->jumlah_sampah,
+
+                ]
+            ];
             $this->transaksi_id = $this->sampah->transaksi_id;
-            $this->jenis_sampah = $this->sampah->jenis_sampah;
-            $this->nama_sampah = $this->sampah->nama_sampah;
-            $this->harga_sampah = $this->sampah->harga_sampah;
-            $this->jumlah_sampah = $this->sampah->jumlah_sampah;
+        } else {
+            // Adding a new Sampah
+            $this->sampah = new Sampah;
+            $this->sampahItems = [];
         }
     }
 }

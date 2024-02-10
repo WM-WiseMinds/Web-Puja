@@ -38,16 +38,18 @@ final class TransaksiTable extends PowerGridComponent
                 ->showRecordCount(),
             Detail::make()
                 ->view('details.transaksi-detail')
-                ->showCollapseIcon()
+                ->showCollapseIcon(),
         ];
     }
 
     public function datasource(): Builder
     {
         return Transaksi::query()
+            ->with('sampah')
             ->join('users', 'transaksi.user_id', '=', 'users.id')
             ->join('nasabah', 'transaksi.nasabah_id', '=', 'nasabah.id')
             ->join('users as nasabah_user', 'nasabah.user_id', '=', 'nasabah_user.id')
+            // ->join('sampah', 'transaksi.id', '=', 'sampah.transaksi_id')
             ->select([
                 'transaksi.id',
                 'transaksi.user_id',
@@ -62,6 +64,11 @@ final class TransaksiTable extends PowerGridComponent
                 'nasabah_user.name as name',
                 'nasabah.alamat as alamat',
                 'nasabah.no_hp as no_hp',
+                // 'sampah.id as sampah_id',
+                // 'sampah.nama_sampah as nama_sampah',
+                // 'sampah.jenis_sampah as jenis_sampah',
+                // 'sampah.harga_sampah as harga_sampah',
+                // 'sampah.jumlah_sampah as jumlah_sampah',
             ]);
     }
 
@@ -191,6 +198,7 @@ final class TransaksiTable extends PowerGridComponent
                 'bulkExportPdf',
                 'delete',
                 'transaksiUpdated' => '$refresh',
+                'sampahUpdated' => '$refresh',
             ]
         );
     }

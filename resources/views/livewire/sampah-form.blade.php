@@ -58,25 +58,16 @@
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="mb-4">
-                        <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
-                        <select wire:model="sampahItems.{{ $index }}.status"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="status">
-                            <option value="">Pilih Status</option>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Nonaktif">Nonaktif</option>
-                        </select>
-                        @error('status')
-                            <span class="text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
                 @endforeach
                 <div class="mb-4">
                     <button type="button" wire:click.prevent="addSampahItem"
                         class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150">
                         Add Sampah Item
                     </button>
+                    {{-- <button type="button" wire:click.prevent="removeSampahItem({{ $index }})"
+                        class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150">
+                        Remove Sampah Item
+                    </button> --}}
                 </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

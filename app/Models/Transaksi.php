@@ -40,7 +40,7 @@ class Transaksi extends Model
     // Relasi antara model Transaksi dengan model Sampah (Satu transaksi memiliki banyak sampah)
     public function sampah()
     {
-        //hasOne digunakan karena relasi antara model Transaksi dengan model Sampah adalah One To Many
-        return $this->hasOne(Sampah::class, 'sampah_id');
+        //hasMany digunakan karena relasi antara model Transaksi dengan model Sampah adalah One To Many
+        return $this->hasMany(Sampah::class, 'transaksi_id');
     }
 }

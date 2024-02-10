@@ -37,7 +37,15 @@ final class SampahTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Sampah::query();
+        return Sampah::query()
+            ->with('transaksi.nasabah.user')
+            ->join('transaksi', 'transaksi.id', '=', 'sampah.transaksi_id')
+            ->select('sampah.*', 'transaksi.id as transaksi_id', 'transaksi.total_sampah', 'transaksi.total_berat', 'transaksi.created_at')
+            ->addSelect(['nasabah_user_name' => function ($query) {
+                $query->select('name')
+                    ->from('users')
+                    ->whereColumn('users.id', 'transaksi.user_id');
+            }]);
     }
 
     public function relationSearch(): array
@@ -49,11 +57,12 @@ final class SampahTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('transaksi_id')
             ->add('jenis_sampah')
             ->add('nama_sampah')
             ->add('harga_sampah')
             ->add('jumlah_sampah')
-            ->add('total_sampah')
+            ->add('nasabah_user_name')
             ->add('created_at');
     }
 
@@ -64,30 +73,20 @@ final class SampahTable extends PowerGridComponent
             Column::make('Jenis sampah', 'jenis_sampah')
                 ->sortable()
                 ->searchable(),
-
             Column::make('Nama sampah', 'nama_sampah')
                 ->sortable()
                 ->searchable(),
-
             Column::make('Harga sampah', 'harga_sampah')
                 ->sortable()
                 ->searchable(),
-
             Column::make('Jumlah sampah', 'jumlah_sampah')
                 ->sortable()
                 ->searchable(),
-
-            Column::make('Total sampah', 'total_sampah')
+            Column::make('Nama Nasabah', 'nasabah_user_name')
                 ->sortable()
                 ->searchable(),
-
             Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->sortable(),
-
-            Column::make('Created at', 'created_at')
-                ->sortable()
-                ->searchable(),
-
             Column::action('Action')
         ];
     }
