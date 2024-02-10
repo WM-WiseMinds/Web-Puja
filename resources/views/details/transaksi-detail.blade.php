@@ -79,7 +79,7 @@
                         </button>
                         <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"><svg
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                class="w-5 h-5">
+                                class="w-5 h-5" wire:click="deleteSampah({{ $sampah->id }})">
                                 <path
                                     d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
                                 <path fill-rule="evenodd"

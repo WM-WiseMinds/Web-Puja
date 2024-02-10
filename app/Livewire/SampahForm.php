@@ -77,20 +77,6 @@ class SampahForm extends ModalComponent
         $this->resetCreateForm();
     }
 
-    // public function mount($transaksi_id = null, $sampah_id = null)
-    // {
-    //     $this->transaksi_id = $transaksi_id;
-    //     $this->transaksi = Transaksi::all();
-    //     $this->sampah = $sampah_id ? Sampah::find($sampah_id) : new Sampah;
-    //     if ($this->sampah && $this->sampah->exists) {
-    //         $this->transaksi_id = $this->sampah->transaksi_id;
-    //         $this->jenis_sampah = $this->sampah->jenis_sampah;
-    //         $this->nama_sampah = $this->sampah->nama_sampah;
-    //         $this->harga_sampah = $this->sampah->harga_sampah;
-    //         $this->jumlah_sampah = $this->sampah->jumlah_sampah;
-    //     }
-    // }
-
     public function mount($transaksi_id = null, $sampah_id = null)
     {
         $this->transaksi_id = $transaksi_id;

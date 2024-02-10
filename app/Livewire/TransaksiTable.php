@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Sampah;
 use App\Models\Transaksi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
@@ -49,7 +50,6 @@ final class TransaksiTable extends PowerGridComponent
             ->join('users', 'transaksi.user_id', '=', 'users.id')
             ->join('nasabah', 'transaksi.nasabah_id', '=', 'nasabah.id')
             ->join('users as nasabah_user', 'nasabah.user_id', '=', 'nasabah_user.id')
-            // ->join('sampah', 'transaksi.id', '=', 'sampah.transaksi_id')
             ->select([
                 'transaksi.id',
                 'transaksi.user_id',
@@ -64,11 +64,6 @@ final class TransaksiTable extends PowerGridComponent
                 'nasabah_user.name as name',
                 'nasabah.alamat as alamat',
                 'nasabah.no_hp as no_hp',
-                // 'sampah.id as sampah_id',
-                // 'sampah.nama_sampah as nama_sampah',
-                // 'sampah.jenis_sampah as jenis_sampah',
-                // 'sampah.harga_sampah as harga_sampah',
-                // 'sampah.jumlah_sampah as jumlah_sampah',
             ]);
     }
 
@@ -199,6 +194,7 @@ final class TransaksiTable extends PowerGridComponent
                 'delete',
                 'transaksiUpdated' => '$refresh',
                 'sampahUpdated' => '$refresh',
+                'sampahDeleted' => '$refresh',
             ]
         );
     }
@@ -245,5 +241,14 @@ final class TransaksiTable extends PowerGridComponent
         $transaksi = Transaksi::findOrFail($rowId);
         $transaksi->delete();
         $this->success('Transaksi berhasil dihapus');
+    }
+
+    public function deleteSampah($sampah_id)
+    {
+        $sampah = Sampah::find($sampah_id);
+        if ($sampah) {
+            $sampah->delete();
+            $this->success('Sampah berhasil dihapus');
+        }
     }
 }
