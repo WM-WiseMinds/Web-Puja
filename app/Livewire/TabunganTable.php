@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Footer;
@@ -32,12 +33,16 @@ final class TabunganTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->view('details.tabungan-detail')
+                ->showCollapseIcon(),
         ];
     }
 
     public function datasource(): Builder
     {
         return Tabungan::query()
+            ->with('historyTabungan')
             ->join('nasabah', 'nasabah.id', '=', 'tabungan.nasabah_id')
             ->join('users', 'users.id', '=', 'nasabah.user_id')
             ->select('tabungan.*', 'users.name as nama');
@@ -54,12 +59,8 @@ final class TabunganTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('nasabah_id')
-            // ->add('tanggal_formatted', fn (Tabungan $model) => Carbon::parse($model->tanggal)->format('d/m/Y'))
-            // ->add('debit')
-            // ->add('kredit')
-            ->add('saldo')
-            // ->add('keterangan')
+            ->add('nama')
+            ->add('saldo', fn (Tabungan $model) => 'Rp ' . number_format($model->saldo, 0, ',', '.'))
             ->add('status')
             ->add('created_at');
     }
@@ -68,32 +69,15 @@ final class TabunganTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Nasabah id', 'nasabah_id'),
-            // Column::make('Tanggal', 'tanggal_formatted', 'tanggal')
-            //     ->sortable(),
-
-            // Column::make('Debit', 'debit')
-            //     ->sortable()
-            //     ->searchable(),
-
-            // Column::make('Kredit', 'kredit')
-            //     ->sortable()
-            //     ->searchable(),
+            Column::make('Nama Nasabah', 'nama'),
 
             Column::make('Saldo', 'saldo')
                 ->sortable()
                 ->searchable(),
 
-            // Column::make('Keterangan', 'keterangan')
-            //     ->sortable()
-            //     ->searchable(),
-
             Column::make('Status', 'status')
                 ->sortable()
                 ->searchable(),
-
-            // Column::make('Created at', 'created_at_formatted', 'created_at')
-            //     ->sortable(),
 
             Column::make('Created at', 'created_at')
                 ->sortable()
@@ -105,15 +89,7 @@ final class TabunganTable extends PowerGridComponent
 
     public function filters(): array
     {
-        return [
-            Filter::datepicker('tanggal'),
-        ];
-    }
-
-    #[\Livewire\Attributes\On('edit')]
-    public function edit($rowId): void
-    {
-        $this->js('alert(' . $rowId . ')');
+        return [];
     }
 
     public function actions(\App\Models\Tabungan $row): array
@@ -126,16 +102,4 @@ final class TabunganTable extends PowerGridComponent
                 ->dispatch('edit', ['rowId' => $row->id])
         ];
     }
-
-    /*
-    public function actionRules($row): array
-    {
-       return [
-            // Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($row) => $row->id === 1)
-                ->hide(),
-        ];
-    }
-    */
 }

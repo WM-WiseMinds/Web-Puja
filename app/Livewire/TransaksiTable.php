@@ -256,11 +256,12 @@ final class TransaksiTable extends PowerGridComponent
 
             if ($tabungan) {
                 // Kurangi total harga sampah dari saldo tabungan
-                $tabungan->updateSaldo(-$totalHargaSampah, 'debit', 'Penghapusan Sampah');
+                $tabungan->updateSaldo($totalHargaSampah, 'kredit', 'Penghapusan Data Sampah');
             }
 
             $sampah->delete();
             $this->success('Sampah berhasil dihapus');
+            $this->success('Tabungan berhasil diupdate');
         }
     }
 }
