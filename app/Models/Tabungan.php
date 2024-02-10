@@ -31,26 +31,55 @@ class Tabungan extends Model
         return $this->belongsTo(Nasabah::class, 'nasabah_id');
     }
 
+    // Relasi antara model Tabungan dengan model Penukaran (Satu tabungan memiliki banyak penukaran)
     public function penukaran()
     {
         //hasMany digunakan karena relasi antara model Tabungan dengan model Penukaran adalah One To Many
         return $this->hasMany(Penukaran::class, 'penukaran_id');
     }
 
+    // Relasi antara model Tabungan dengan model HistoryTabungan (Satu tabungan memiliki banyak history tabungan)
+    public function historyTabungan()
+    {
+        //hasMany digunakan karena relasi antara model Tabungan dengan model HistoryTabungan adalah One To Many
+        return $this->hasMany(HistoryTabungan::class, 'tabungan_id');
+    }
+
+    /**
+     * Method untuk memperbarui saldo tabungan.
+     *
+     * @param int $jumlah Jumlah uang yang akan ditambahkan atau dikurangi.
+     * @param string $jenis Jenis transaksi, bisa 'debit' atau 'kredit'.
+     * @param string $keterangan Keterangan untuk transaksi.
+     */
     public function updateSaldo($jumlah, $jenis = 'debit', $keterangan = '')
     {
+        // Jika jenis transaksi adalah 'debit'
         if ($jenis === 'debit') {
+            // Menambah jumlah ke total 'debit'
             $this->increment('debit', $jumlah);
+
+            // Jika jumlah lebih dari atau sama dengan 0
             if ($jumlah >= 0) {
+                // Menambah jumlah ke saldo
                 $this->increment('saldo', $jumlah); // Menambah saldo
             } else {
+                // Jika jumlah kurang dari 0, mengurangi jumlah absolut dari saldo
                 $this->decrement('saldo', abs($jumlah)); // Mengurangi saldo jika jumlah negatif
             }
         } else {
+            // Jika jenis transaksi adalah 'kredit'
+            // Menambah jumlah ke total 'kredit'
             $this->increment('kredit', $jumlah);
+
+            // Mengurangi jumlah dari saldo
             $this->decrement('saldo', $jumlah); // Mengurangi saldo
         }
+
+        // Menyimpan keterangan transaksi
         $this->keterangan = $keterangan;
+
+        // Menyimpan perubahan ke database
         $this->save();
     }
 }
