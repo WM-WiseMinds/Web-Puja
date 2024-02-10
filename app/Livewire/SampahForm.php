@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\HistoryTabungan;
 use App\Models\Sampah;
 use App\Models\Tabungan;
 use App\Models\Transaksi;
@@ -85,17 +86,13 @@ class SampahForm extends ModalComponent
                     'nasabah_id' => Transaksi::find($this->transaksi_id)->nasabah_id,
                 ], [
                     'saldo' => 0,
-                    'debit' => 0,
-                    'kredit' => 0,
-                    'keterangan' => '',
                 ]);
 
                 $keterangan = 'Penjualan Sampah';
                 $tabungan->updateSaldo($perubahanSaldo, 'debit', $keterangan);
+                $this->success('Tabungan berhasil diperbarui');
             }
-            $tabungan->save();
 
-            $this->success('Tabungan berhasil diperbarui');
 
             DB::commit();
 

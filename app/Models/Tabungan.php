@@ -16,10 +16,7 @@ class Tabungan extends Model
     //protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel tabungan
     protected $fillable = [
         'nasabah_id',
-        'debit',
-        'kredit',
         'saldo',
-        'keterangan',
         'status',
 
     ];
@@ -56,30 +53,23 @@ class Tabungan extends Model
     {
         // Jika jenis transaksi adalah 'debit'
         if ($jenis === 'debit') {
-            // Menambah jumlah ke total 'debit'
-            $this->increment('debit', $jumlah);
-
-            // Jika jumlah lebih dari atau sama dengan 0
-            if ($jumlah >= 0) {
-                // Menambah jumlah ke saldo
-                $this->increment('saldo', $jumlah); // Menambah saldo
-            } else {
-                // Jika jumlah kurang dari 0, mengurangi jumlah absolut dari saldo
-                $this->decrement('saldo', abs($jumlah)); // Mengurangi saldo jika jumlah negatif
-            }
+            // Menambah jumlah ke saldo
+            $this->saldo += $jumlah;
         } else {
             // Jika jenis transaksi adalah 'kredit'
-            // Menambah jumlah ke total 'kredit'
-            $this->increment('kredit', $jumlah);
-
             // Mengurangi jumlah dari saldo
-            $this->decrement('saldo', $jumlah); // Mengurangi saldo
+            $this->saldo -= $jumlah;
         }
-
-        // Menyimpan keterangan transaksi
-        $this->keterangan = $keterangan;
 
         // Menyimpan perubahan ke database
         $this->save();
+
+        // Membuat record baru di tabel history_tabungan
+        $historyTabungan = new HistoryTabungan();
+        $historyTabungan->tabungan_id = $this->id;
+        $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
+        $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
+        $historyTabungan->keterangan = $keterangan;
+        $historyTabungan->save();
     }
 }

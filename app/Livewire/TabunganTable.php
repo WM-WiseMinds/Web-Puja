@@ -56,10 +56,10 @@ final class TabunganTable extends PowerGridComponent
             ->add('id')
             ->add('nasabah_id')
             // ->add('tanggal_formatted', fn (Tabungan $model) => Carbon::parse($model->tanggal)->format('d/m/Y'))
-            ->add('debit')
-            ->add('kredit')
+            // ->add('debit')
+            // ->add('kredit')
             ->add('saldo')
-            ->add('keterangan')
+            // ->add('keterangan')
             ->add('status')
             ->add('created_at');
     }
@@ -72,28 +72,28 @@ final class TabunganTable extends PowerGridComponent
             // Column::make('Tanggal', 'tanggal_formatted', 'tanggal')
             //     ->sortable(),
 
-            Column::make('Debit', 'debit')
-                ->sortable()
-                ->searchable(),
+            // Column::make('Debit', 'debit')
+            //     ->sortable()
+            //     ->searchable(),
 
-            Column::make('Kredit', 'kredit')
-                ->sortable()
-                ->searchable(),
+            // Column::make('Kredit', 'kredit')
+            //     ->sortable()
+            //     ->searchable(),
 
             Column::make('Saldo', 'saldo')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Keterangan', 'keterangan')
-                ->sortable()
-                ->searchable(),
+            // Column::make('Keterangan', 'keterangan')
+            //     ->sortable()
+            //     ->searchable(),
 
             Column::make('Status', 'status')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->sortable(),
+            // Column::make('Created at', 'created_at_formatted', 'created_at')
+            //     ->sortable(),
 
             Column::make('Created at', 'created_at')
                 ->sortable()

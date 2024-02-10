@@ -19,17 +19,8 @@ return new class extends Migration
             // Kolom nasabah_id adalah foreign key yang terhubung ke tabel 'nasabahs' dengan opsi nullable (bisa kosong)
             $table->foreignId('nasabah_id')->constrained('nasabah')->nullable();
 
-            // Kolom debit akan menyimpan nilai transaksi debit (maksimal 11 digit)
-            $table->integer('debit');
-
-            // Kolom kredit akan menyimpan nilai transaksi kredit (maksimal 11 digit)
-            $table->integer('kredit');
-
             // Kolom saldo akan menyimpan saldo setelah transaksi (maksimal 11 digit)
             $table->integer('saldo');
-
-            // Kolom keterangan akan menyimpan keterangan transaksi (maksimal 128 karakter)
-            $table->string('keterangan', 128);
 
             // Kolom status akan digunakan untuk mengidentifikasi status transaksi
             $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
