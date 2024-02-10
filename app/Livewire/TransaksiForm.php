@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Nasabah;
+use App\Models\Tabungan;
 use App\Models\Transaksi;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use LivewireUI\Modal\ModalComponent;
 use Masmerise\Toaster\Toastable;
 
@@ -38,6 +40,7 @@ class TransaksiForm extends ModalComponent
     {
         $validatedData = $this->validate();
         $validatedData['user_id'] = auth()->id();
+
         $this->transaksi->fill($validatedData);
         $this->transaksi->save();
 

@@ -19,12 +19,11 @@ class TabunganFactory extends Factory
     {
         return [
             'nasabah_id' => Nasabah::factory(),
-            'tanggal' => $this->faker->date(),
             'debit' => $this->faker->randomNumber(5),
             'kredit' => $this->faker->randomNumber(5),
             'saldo' => $this->faker->randomNumber(5),
-            'keterangan' => $this->faker->text(),
-            'status' => $this->faker->randomElement(['aktif', 'nonaktif']),
+            'keterangan' => $this->faker->word(),
+            'status' => $this->faker->randomElement(['Aktif', 'Nonaktif']),
         ];
     }
 }

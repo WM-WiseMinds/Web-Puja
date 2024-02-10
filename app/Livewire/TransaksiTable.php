@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Sampah;
+use App\Models\Tabungan;
 use App\Models\Transaksi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
@@ -83,7 +84,7 @@ final class TransaksiTable extends PowerGridComponent
             ->add('id')
             ->add('nasabah_user_id')
             ->add('name')
-            ->add('total_harga_formatted', fn (Transaksi $model) => 'Rp ' . number_format($model->total_harga, 0, ',', '.'))
+            ->add('total_harga_formatted', fn (Transaksi $model) => 'Rp ' . number_format($model->total_harga_sampah, 0, ',', '.'))
             ->add('status')
             ->add('created_at_formatted', fn (Transaksi $model) => Carbon::parse($model->tgl_transaksi)->format('d/m/Y'));
     }
@@ -247,6 +248,17 @@ final class TransaksiTable extends PowerGridComponent
     {
         $sampah = Sampah::find($sampah_id);
         if ($sampah) {
+            // Hitung total harga sampah
+            $totalHargaSampah = $sampah->jumlah_sampah * $sampah->harga_sampah;
+
+            // Dapatkan tabungan nasabah
+            $tabungan = Tabungan::where('nasabah_id', $sampah->transaksi->nasabah_id)->first();
+
+            if ($tabungan) {
+                // Kurangi total harga sampah dari saldo tabungan
+                $tabungan->updateSaldo(-$totalHargaSampah, 'debit', 'Penghapusan Sampah');
+            }
+
             $sampah->delete();
             $this->success('Sampah berhasil dihapus');
         }

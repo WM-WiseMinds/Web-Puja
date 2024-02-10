@@ -39,13 +39,14 @@ final class TabunganTable extends PowerGridComponent
     {
         return Tabungan::query()
             ->join('nasabah', 'nasabah.id', '=', 'tabungan.nasabah_id')
-            ->select('tabungan.*', 'nasabah.nama');
+            ->join('users', 'users.id', '=', 'nasabah.user_id')
+            ->select('tabungan.*', 'users.name as nama');
     }
 
     public function relationSearch(): array
     {
         return [
-            'nasabah' => ['nama'],
+            'user' => ['nama'],
         ];
     }
 
@@ -54,7 +55,7 @@ final class TabunganTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('nasabah_id')
-            ->add('tanggal_formatted', fn (Tabungan $model) => Carbon::parse($model->tanggal)->format('d/m/Y'))
+            // ->add('tanggal_formatted', fn (Tabungan $model) => Carbon::parse($model->tanggal)->format('d/m/Y'))
             ->add('debit')
             ->add('kredit')
             ->add('saldo')
@@ -68,8 +69,8 @@ final class TabunganTable extends PowerGridComponent
         return [
             Column::make('Id', 'id'),
             Column::make('Nasabah id', 'nasabah_id'),
-            Column::make('Tanggal', 'tanggal_formatted', 'tanggal')
-                ->sortable(),
+            // Column::make('Tanggal', 'tanggal_formatted', 'tanggal')
+            //     ->sortable(),
 
             Column::make('Debit', 'debit')
                 ->sortable()

@@ -19,9 +19,6 @@ return new class extends Migration
             // Kolom nasabah_id adalah foreign key yang terhubung ke tabel 'nasabahs' dengan opsi nullable (bisa kosong)
             $table->foreignId('nasabah_id')->constrained('nasabah')->nullable();
 
-            // Kolom tanggal akan menyimpan tanggal transaksi
-            $table->date('tanggal');
-
             // Kolom debit akan menyimpan nilai transaksi debit (maksimal 11 digit)
             $table->integer('debit');
 

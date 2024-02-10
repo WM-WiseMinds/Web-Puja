@@ -16,7 +16,6 @@ class Tabungan extends Model
     //protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel tabungan
     protected $fillable = [
         'nasabah_id',
-        'tanggal',
         'debit',
         'kredit',
         'saldo',
@@ -36,5 +35,22 @@ class Tabungan extends Model
     {
         //hasMany digunakan karena relasi antara model Tabungan dengan model Penukaran adalah One To Many
         return $this->hasMany(Penukaran::class, 'penukaran_id');
+    }
+
+    public function updateSaldo($jumlah, $jenis = 'debit', $keterangan = '')
+    {
+        if ($jenis === 'debit') {
+            $this->increment('debit', $jumlah);
+            if ($jumlah >= 0) {
+                $this->increment('saldo', $jumlah); // Menambah saldo
+            } else {
+                $this->decrement('saldo', abs($jumlah)); // Mengurangi saldo jika jumlah negatif
+            }
+        } else {
+            $this->increment('kredit', $jumlah);
+            $this->decrement('saldo', $jumlah); // Mengurangi saldo
+        }
+        $this->keterangan = $keterangan;
+        $this->save();
     }
 }
