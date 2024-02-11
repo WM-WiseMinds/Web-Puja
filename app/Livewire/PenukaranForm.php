@@ -37,8 +37,8 @@ class PenukaranForm extends ModalComponent
     public function store()
     {
         $validatedData = $this->validate();
-        if (!$this->validateSaldoCukup()) {
-            $this->error('Saldo tidak cukup untuk melakukan penukaran');
+        if (!$this->validateData()) {
+            // $this->error('Saldo tidak cukup untuk melakukan penukaran');
             return;
         }
 
@@ -46,6 +46,10 @@ class PenukaranForm extends ModalComponent
         $this->penukaran->save();
         $this->success($this->penukaran->wasRecentlyCreated ? 'Penukaran berhasil ditambahkan' : 'Penukaran berhasil diubah');
 
+        // Kurangi stok barang
+        $barang = Barang::find($this->barang_id);
+        $barang->stok_barang -= 1;
+        $barang->save();
 
         $tabungan = Tabungan::find($this->penukaran->tabungan_id);
         $harga = $this->penukaran->barang->harga_barang;
@@ -77,12 +81,18 @@ class PenukaranForm extends ModalComponent
         }
     }
 
-    public function validateSaldoCukup()
+    public function validateData()
     {
         $tabungan = Tabungan::find($this->tabungan_id);
         $barang = Barang::find($this->barang_id);
 
         if ($tabungan->saldo < $barang->harga_barang) {
+            $this->error('Saldo tidak cukup untuk melakukan penukaran');
+            return false;
+        }
+
+        if ($barang->stok_barang <= 0) {
+            $this->error('Barang yang dipilih sedang kosong');
             return false;
         }
 

@@ -59,17 +59,6 @@ class Tabungan extends Model
 
     public function updateSaldo($jumlah, $jenis = 'debit', $keterangan = '', $created_at = null)
     {
-        // $saldoAwal = $this->saldo;
-        // // Jika jenis transaksi adalah 'debit'
-        // if ($jenis === 'debit') {
-        //     $this->saldo = $saldoAwal - $jumlah;
-        // } else {
-        //     $this->saldo = $saldoAwal + $jumlah;
-        // }
-
-        // // Menyimpan perubahan ke database
-        // $this->save();
-
         // Try to find an existing history record
         $historyTabungan = HistoryTabungan::where('tabungan_id', $this->id)
             ->where('keterangan', $keterangan)
@@ -86,19 +75,6 @@ class Tabungan extends Model
 
     public function createSaldo($jumlah, $jenis = 'debit', $keterangan = '')
     {
-        // // Jika jenis transaksi adalah 'debit'
-        // if ($jenis === 'debit') {
-        //     // Menambah jumlah ke saldo
-        //     $this->saldo += $jumlah;
-        // } else {
-        //     // Jika jenis transaksi adalah 'kredit'
-        //     // Mengurangi jumlah dari saldo
-        //     $this->saldo -= $jumlah;
-        // }
-
-        // // Menyimpan perubahan ke database
-        // $this->save();
-
         // Membuat record baru di tabel history_tabungan
         $historyTabungan = new HistoryTabungan();
         $historyTabungan->tabungan_id = $this->id;

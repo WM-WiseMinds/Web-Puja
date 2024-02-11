@@ -67,8 +67,8 @@ final class PenukaranTable extends PowerGridComponent
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Nama Nasabah', 'nama_nasabah'),
-            Column::make('Nama Barang', 'nama_barang'),
+            Column::make('Nama Nasabah', 'nama_nasabah')->sortable()->searchable(),
+            Column::make('Nama Barang', 'nama_barang')->sortable()->searchable(),
 
             Column::make('Created at', 'created_at')
                 ->sortable()
