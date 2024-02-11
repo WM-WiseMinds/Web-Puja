@@ -19,6 +19,12 @@
                 </div>
             </div>
             <div class="mb-4">
+                <label for="saldo" class="block text-gray-700 text-sm font-bold mb-2">Saldo</label>
+                <input type="text" readonly wire:model="saldo"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="saldo">
+            </div>
+            <div class="mb-4">
                 <label for="exampleFormControlInput4" class="block text-gray-700 text-sm font-bold mb-2">Nama
                     Barang</label>
                 <select wire:model="barang_id"
@@ -32,6 +38,12 @@
                 @error('barang_id')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
+            </div>
+            <div class="mb-4">
+                <label for="harga" class="block text-gray-700 text-sm font-bold mb-2">Harga Barang</label>
+                <input type="text" readonly wire:model="harga"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="harga">
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">

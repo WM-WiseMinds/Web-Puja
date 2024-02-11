@@ -14,7 +14,7 @@ class PenukaranForm extends ModalComponent
     use Toastable;
 
     public Penukaran $penukaran;
-    public $tabungan, $barang, $tabungan_id, $barang_id;
+    public $tabungan, $barang, $tabungan_id, $barang_id, $saldo, $harga;
 
     protected $rules = [
         'tabungan_id' => 'required|exists:tabungan,id',
@@ -66,6 +66,15 @@ class PenukaranForm extends ModalComponent
         if ($this->penukaran->exists) {
             $this->tabungan_id = $this->penukaran->tabungan_id;
             $this->barang_id = $this->penukaran->barang_id;
+        }
+        if ($this->tabungan_id) {
+            $tabungan = Tabungan::findOrFail($this->tabungan_id);
+            $this->saldo = $tabungan->saldo;
+        }
+
+        if ($this->barang_id) {
+            $barang = Barang::findOrFail($this->barang_id);
+            $this->harga = $barang->harga_barang;
         }
     }
 
