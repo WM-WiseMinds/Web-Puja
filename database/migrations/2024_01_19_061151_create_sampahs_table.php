@@ -16,6 +16,9 @@ return new class extends Migration
             // Kolom id akan digunakan sebagai primary key
             $table->id();
 
+            // Kolom transaksi_id akan digunakan sebagai foreign key untuk menghubung tabel sampah dengan tabel transaksi 
+            $table->foreignId('transaksi_id')->constrained('transaksi')->onDelete('cascade');
+
             // Kolom jenis_sampah akan menyimpan jenis sampah (maksimal 50 karakter)
             $table->string('jenis_sampah', 50);
 
@@ -27,9 +30,6 @@ return new class extends Migration
 
             // Kolom jumlah_sampah akan menyimpan jumlah sampah yang terjual (maksimal 11 digit)
             $table->integer('jumlah_sampah');
-
-            // Kolom total_sampah akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
-            $table->integer('total_sampah');
 
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();

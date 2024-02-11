@@ -6,6 +6,7 @@ use App\Models\Nasabah;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -78,7 +79,7 @@ final class NasabahTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Id', 'id')->sortable(),
             Column::make('Nama', 'name'),
 
             Column::make('No Hp', 'no_hp')

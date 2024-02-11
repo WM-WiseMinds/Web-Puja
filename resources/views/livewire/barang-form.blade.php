@@ -3,34 +3,65 @@
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="">
                 <div class="mb-4">
-                    <label for="exampleFormControlInput4" class="block text-gray-700 text-sm font-bold mb-2">Nama
-                        Nasabah</label>
-                    <select wire:model="nasabah_id"
+                    <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Nama
+                        Barang</label>
+                    <input type="text"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="exampleFormControlInput4">
-                        <option value="">Pilih Nama Nasabah</option>
-                        @foreach ($nasabah as $nsbh)
-                            <option value="{{ $nsbh->id }}">{{ $nsbh->user->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('user_id')
+                        id="exampleFormControlInput1" placeholder="Enter Nama Barang" wire:model="nama_barang">
+                    @error('nama_barang')
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="mb-4">
-                    <label for="exampleFormControlInput4" class="block text-gray-700 text-sm font-bold mb-2">Nama
-                        Penanggung Jawab</label>
-                    <input type="text" readonly
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="exampleFormControlInput4" value="{{ auth()->user()->name }}">
-                </div>
-                <div class="mb-4">
-                    <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Total
-                        Berat</label>
+                    <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Harga
+                        Barang</label>
                     <input type="text"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="exampleFormControlInput1" placeholder="Enter Total Berat" wire:model="total_berat">
-                    @error('total_berat')
+                        id="exampleFormControlInput1" placeholder="Enter Harga Barang" wire:model="harga_barang">
+                    @error('harga_barang')
+                        <span class="text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="mb-4">
+                    <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Stok
+                        Barang</label>
+                    <input type="text"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="exampleFormControlInput1" placeholder="Enter Stok Barang" wire:model="stok_barang">
+                    @error('stok_barang')
+                        <span class="text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="mb-4">
+                    <label for="exampleFormControlInput1"
+                        class="block text-gray-700 text-sm font-bold mb-2">Keterangan</label>
+                    <input type="text"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="exampleFormControlInput1" placeholder="Enter Keterangan" wire:model="keterangan">
+                    @error('stok_barang')
+                        <span class="text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="mb-4">
+                    <label for="exampleFormControlInput3"
+                        class="block text-gray-700 text-sm font-bold mb-2">Gambar_barang</label>
+
+                    <input type="file" id="gambar_barang" wire:model.live="gambar_barang" x-ref="gambar_barang"
+                        class="w-full"
+                        x-on:change="
+                            photoName = $refs.gambar_barang.files[0].name;
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                photoPreview = e.target.result;
+                            };
+                            reader.readAsDataURL($refs.gambar_barang.files[0]);
+                        " />
+                    @if ($barang->exists && $barang->gambar_barang)
+                        <x-button emerald class="mt-2">
+                            <a href="{{ $gambar_url }}" download>Download</a>
+                        </x-button>
+                    @endif
+                    @error('gambar_barang')
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>

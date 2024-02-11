@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class NasabahFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->randomElement([1, 2, 3]),
+            'user_id' => $this->faker->unique()->randomElement(User::pluck('id')->toArray()),
             'alamat' => $this->faker->address,
             'no_hp' => $this->faker->phoneNumber,
             'jenis_kelamin' => $this->faker->title,

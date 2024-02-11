@@ -24,5 +24,10 @@ class DatabaseSeeder extends Seeder
         $this->call([PermissionSeeder::class,]);
         $this->call([RolePermissionSeeder::class,]);
         $this->call([NasabahSeeder::class,]);
+        $this->call([TransaksiSeeder::class,]);
+        // $this->call([SampahSeeder::class,]);
+        // $this->call([TabunganSeeder::class,]);
+        // $this->call([HistoryTabunganSeeder::class,]);
+        $this->call([BarangSeeder::class,]);
     }
 }
