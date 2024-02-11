@@ -62,8 +62,7 @@ final class TabunganTable extends PowerGridComponent
             ->add('id')
             ->add('nama')
             ->add('saldo', fn (Tabungan $model) => 'Rp ' . number_format($model->saldo, 0, ',', '.'))
-            ->add('status')
-            ->add('created_at');
+            ->add('status');
     }
 
     public function columns(): array
@@ -78,10 +77,6 @@ final class TabunganTable extends PowerGridComponent
                 ->searchable(),
 
             Column::make('Status', 'status')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Created at', 'created_at')
                 ->sortable()
                 ->searchable(),
 

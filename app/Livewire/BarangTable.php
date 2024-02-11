@@ -3,11 +3,13 @@
 namespace App\Livewire;
 
 use App\Models\Barang;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Footer;
@@ -34,6 +36,9 @@ final class BarangTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->view('details.barang-detail')
+                ->showCollapseIcon(),
         ];
     }
 
@@ -52,12 +57,9 @@ final class BarangTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('nama_barang')
-            ->add('harga_barang')
+            ->add('harga_barang', fn (Barang $model) => 'Rp ' . number_format($model->harga_barang, 0, ',', '.'))
             ->add('stok_barang')
-            ->add('gambar_barang')
-            ->add('keterangan')
-            ->add('status')
-            ->add('created_at');
+            ->add('status');
     }
 
     public function columns(): array
@@ -76,22 +78,7 @@ final class BarangTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Gambar barang', 'gambar_barang')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Keterangan', 'keterangan')
-                ->sortable()
-                ->searchable(),
-
             Column::make('Status', 'status')
-                ->sortable()
-                ->searchable(),
-
-            Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->sortable(),
-
-            Column::make('Created at', 'created_at')
                 ->sortable()
                 ->searchable(),
 

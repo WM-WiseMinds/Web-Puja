@@ -86,7 +86,7 @@ final class TransaksiTable extends PowerGridComponent
             ->add('name')
             ->add('total_harga_formatted', fn (Transaksi $model) => 'Rp ' . number_format($model->total_harga_sampah, 0, ',', '.'))
             ->add('status')
-            ->add('created_at_formatted', fn (Transaksi $model) => Carbon::parse($model->tgl_transaksi)->format('d/m/Y'));
+            ->add('created_at_formatted', fn (Transaksi $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
     public function columns(): array
