@@ -20,7 +20,7 @@
             </div>
             <div class="mb-4">
                 <label for="saldo" class="block text-gray-700 text-sm font-bold mb-2">Saldo</label>
-                <input type="text" readonly wire:model="saldo"
+                <input type="text" readonly wire:model="saldoTabungan"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="saldo">
             </div>
@@ -41,7 +41,7 @@
             </div>
             <div class="mb-4">
                 <label for="harga" class="block text-gray-700 text-sm font-bold mb-2">Harga Barang</label>
-                <input type="text" readonly wire:model="harga"
+                <input type="text" readonly wire:model="hargaBarang"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="harga">
             </div>

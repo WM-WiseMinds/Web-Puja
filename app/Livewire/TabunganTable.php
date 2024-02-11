@@ -42,11 +42,18 @@ final class TabunganTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Tabungan::query()
+        $tabungans = Tabungan::query()
             ->with('historyTabungan')
             ->join('nasabah', 'nasabah.id', '=', 'tabungan.nasabah_id')
             ->join('users', 'users.id', '=', 'nasabah.user_id')
             ->select('tabungan.*', 'users.name as nama');
+
+        // Update the saldo for each Tabungan
+        foreach ($tabungans->get() as $tabungan) {
+            $tabungan->updateSaldoTable();
+        }
+
+        return $tabungans;
     }
 
     public function relationSearch(): array

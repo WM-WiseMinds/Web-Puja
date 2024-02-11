@@ -42,27 +42,62 @@ class Tabungan extends Model
         return $this->hasMany(HistoryTabungan::class, 'tabungan_id');
     }
 
-    /**
-     * Method untuk memperbarui saldo tabungan.
-     *
-     * @param int $jumlah Jumlah uang yang akan ditambahkan atau dikurangi.
-     * @param string $jenis Jenis transaksi, bisa 'debit' atau 'kredit'.
-     * @param string $keterangan Keterangan untuk transaksi.
-     */
-    public function updateSaldo($jumlah, $jenis = 'debit', $keterangan = '')
+    public function updateSaldoTable()
     {
-        // Jika jenis transaksi adalah 'debit'
-        if ($jenis === 'debit') {
-            // Menambah jumlah ke saldo
-            $this->saldo += $jumlah;
-        } else {
-            // Jika jenis transaksi adalah 'kredit'
-            // Mengurangi jumlah dari saldo
-            $this->saldo -= $jumlah;
+        $saldo = 0;
+
+        foreach ($this->historyTabungan as $historyTabungan) {
+            $debit = intval($historyTabungan->debit);
+            $kredit = intval($historyTabungan->kredit);
+            $saldo += $debit - $kredit;
         }
 
-        // Menyimpan perubahan ke database
-        $this->save();
+        // Update the saldo field in the Tabungan model
+        $this->update(['saldo' => $saldo]);
+    }
+
+
+    public function updateSaldo($jumlah, $jenis = 'debit', $keterangan = '', $created_at = null)
+    {
+        // $saldoAwal = $this->saldo;
+        // // Jika jenis transaksi adalah 'debit'
+        // if ($jenis === 'debit') {
+        //     $this->saldo = $saldoAwal - $jumlah;
+        // } else {
+        //     $this->saldo = $saldoAwal + $jumlah;
+        // }
+
+        // // Menyimpan perubahan ke database
+        // $this->save();
+
+        // Try to find an existing history record
+        $historyTabungan = HistoryTabungan::where('tabungan_id', $this->id)
+            ->where('keterangan', $keterangan)
+            ->where('created_at', $created_at)
+            ->first();
+
+        if ($historyTabungan) {
+            // If a history record exists, update it
+            $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
+            $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
+            $historyTabungan->save();
+        }
+    }
+
+    public function createSaldo($jumlah, $jenis = 'debit', $keterangan = '')
+    {
+        // // Jika jenis transaksi adalah 'debit'
+        // if ($jenis === 'debit') {
+        //     // Menambah jumlah ke saldo
+        //     $this->saldo += $jumlah;
+        // } else {
+        //     // Jika jenis transaksi adalah 'kredit'
+        //     // Mengurangi jumlah dari saldo
+        //     $this->saldo -= $jumlah;
+        // }
+
+        // // Menyimpan perubahan ke database
+        // $this->save();
 
         // Membuat record baru di tabel history_tabungan
         $historyTabungan = new HistoryTabungan();

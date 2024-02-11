@@ -89,7 +89,7 @@ class SampahForm extends ModalComponent
                 ]);
 
                 $keterangan = 'Penjualan Sampah';
-                $tabungan->updateSaldo($perubahanSaldo, 'debit', $keterangan);
+                $tabungan->createSaldo($perubahanSaldo, 'debit', $keterangan);
                 $this->success('Tabungan berhasil diperbarui');
             }
 

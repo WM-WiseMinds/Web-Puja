@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Barang;
+use App\Models\HistoryTabungan;
 use App\Models\Penukaran;
 use App\Models\Tabungan;
 use Illuminate\Support\Facades\Log;
@@ -45,10 +46,17 @@ class PenukaranForm extends ModalComponent
         $this->penukaran->save();
         $this->success($this->penukaran->wasRecentlyCreated ? 'Penukaran berhasil ditambahkan' : 'Penukaran berhasil diubah');
 
-        $tabungan = Tabungan::find($this->penukaran->tabungan_id);
 
+        $tabungan = Tabungan::find($this->penukaran->tabungan_id);
         $harga = $this->penukaran->barang->harga_barang;
-        $tabungan->updateSaldo($harga, 'kredit', 'Penukaran barang');
+        $created_at = $this->penukaran->created_at;
+        if ($this->penukaran->wasRecentlyCreated) {
+            // dd($this->penukaran->wasRecentlyCreated);
+            $tabungan->createSaldo($harga, 'kredit', 'Penukaran barang');
+        } else {
+            $tabungan->updateSaldo($harga, 'kredit', 'Penukaran barang', $created_at);
+        }
+
         $this->success('Saldo berhasil dikurangi');
 
         $this->closeModalWithEvents([
@@ -66,15 +74,6 @@ class PenukaranForm extends ModalComponent
         if ($this->penukaran->exists) {
             $this->tabungan_id = $this->penukaran->tabungan_id;
             $this->barang_id = $this->penukaran->barang_id;
-        }
-        if ($this->tabungan_id) {
-            $tabungan = Tabungan::findOrFail($this->tabungan_id);
-            $this->saldo = $tabungan->saldo;
-        }
-
-        if ($this->barang_id) {
-            $barang = Barang::findOrFail($this->barang_id);
-            $this->harga = $barang->harga_barang;
         }
     }
 

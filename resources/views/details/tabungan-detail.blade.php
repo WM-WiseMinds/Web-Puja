@@ -1,4 +1,12 @@
 <div class="p-2 bg-white border border-slate-200">
+    @php
+        $saldo = intval($row->saldo);
+        foreach ($row->historyTabungan as $historyTabungan) {
+            $debit = intval($historyTabungan->debit);
+            $kredit = intval($historyTabungan->kredit);
+            $saldo = $saldo + $debit - $kredit;
+        }
+    @endphp
     <table class="table-auto w-full">
         <tbody>
             <tr>
@@ -19,7 +27,7 @@
             </tr>
             <tr>
                 <td class="border px-4 py-2 text-sm font-semibold">Saldo</td>
-                <td class="border px-4 py-2">{{ $row->saldo }}</td>
+                <td class="border px-4 py-2">Rp {{ number_format($saldo, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="border px-4 py-2 text-sm font-semibold">Status</td>
@@ -43,15 +51,15 @@
             </tr>
         </thead>
         <tbody>
-            @php
+            {{-- @php
                 $saldo = intval($row->saldo);
-            @endphp
+            @endphp --}}
             @foreach ($row->historyTabungan as $historyTabungan)
-                @php
+                {{-- @php
                     $debit = intval($historyTabungan->debit);
                     $kredit = intval($historyTabungan->kredit);
                     $saldo = $saldo + $debit - $kredit;
-                @endphp
+                @endphp --}}
                 <tr>
                     <td class="border px-4 py-2">Rp {{ number_format($historyTabungan->debit, 0, ',', '.') }}</td>
                     <td class="border px-4 py-2">Rp {{ number_format($historyTabungan->kredit, 0, ',', '.') }}</td>
@@ -59,6 +67,10 @@
                     <td class="border px-4 py-2">{{ $historyTabungan->keterangan }}</td>
                 </tr>
             @endforeach
+            {{-- @php
+                // Update the saldo field in the Tabungan model
+                $row->update(['saldo' => $saldo]);
+            @endphp --}}
         </tbody>
     </table>
 </div>
