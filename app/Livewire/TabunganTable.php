@@ -69,8 +69,8 @@ final class TabunganTable extends PowerGridComponent
     {
         $status = true;
         return [
-            Column::make('Id', 'id'),
-            Column::make('Nama Nasabah', 'nama'),
+            Column::make('Id', 'id')->sortable(),
+            Column::make('Nama Nasabah', 'nama')->sortable()->searchable(),
 
             Column::make('Saldo', 'saldo')
                 ->sortable()

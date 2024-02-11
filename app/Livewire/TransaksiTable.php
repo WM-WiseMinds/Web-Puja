@@ -92,7 +92,7 @@ final class TransaksiTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Id', 'id')->sortable(),
             Column::make('Nama Nasabah', 'name'),
 
             Column::make('Total harga', 'total_harga_formatted', 'total_harga')

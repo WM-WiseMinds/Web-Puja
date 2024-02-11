@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Jobs\DeleteFile;
 use App\Models\Barang;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
@@ -65,7 +65,7 @@ final class BarangTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Id', 'id')->sortable(),
             Column::make('Nama barang', 'nama_barang')
                 ->sortable()
                 ->searchable(),
@@ -88,7 +88,12 @@ final class BarangTable extends PowerGridComponent
 
     public function filters(): array
     {
-        return [];
+        return [
+            Filter::select('status', 'barang.status')
+                ->dataSource(Barang::all()->unique('status'))
+                ->optionValue('status')
+                ->optionLabel('status'),
+        ];
     }
 
     public function actions(\App\Models\Barang $row): array
@@ -171,6 +176,8 @@ final class BarangTable extends PowerGridComponent
         $pdf->save($path . '/barang.pdf');
         // Menampilkan file pdf
         return response()->download($path . '/barang.pdf');
+
+        // Delete the file after download
     }
 
     public function bulkExportPdf()
@@ -188,7 +195,14 @@ final class BarangTable extends PowerGridComponent
         // Menyimpan file pdf ke folder pdf
         $pdf->save($path . '/barang.pdf');
         // Menampilkan file pdf
-        return response()->download($path . '/barang.pdf');
+        // return response()->download($path . '/barang.pdf');
+
+        // Download the file
+        $response = response()->download($path . '/barang.pdf');
+
+        DeleteFile::dispatch($path . '/barang.pdf')->delay(now()->addMinutes(1));
+
+        return $response;
     }
 
     // Function to delete data
