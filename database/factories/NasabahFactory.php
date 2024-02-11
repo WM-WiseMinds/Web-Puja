@@ -18,7 +18,7 @@ class NasabahFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => $this->faker->unique()->randomElement(User::pluck('id')->toArray()),
             'alamat' => $this->faker->address,
             'no_hp' => $this->faker->phoneNumber,
             'jenis_kelamin' => $this->faker->title,

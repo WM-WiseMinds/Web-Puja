@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Transaksi;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class SampahFactory extends Factory
     public function definition(): array
     {
         return [
-            'transaksi_id' => $this->faker->numberBetween(1, 10),
+            'transaksi_id' => $this->faker->randomElement(Transaksi::pluck('id')->toArray()),
             'jenis_sampah' => $this->faker->word(),
             'nama_sampah' => $this->faker->word(),
             'harga_sampah' => $this->faker->numberBetween(1000, 1000000),

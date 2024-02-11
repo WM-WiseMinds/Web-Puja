@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Nasabah;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +19,8 @@ class TransaksiFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->numberBetween(1, 10),
-            'nasabah_id' => $this->faker->numberBetween(1, 10),
+            'user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
+            'nasabah_id' => $this->faker->randomElement(Nasabah::pluck('id')->toArray()),
             'total_sampah' => $this->faker->numberBetween(1, 100),
             'total_berat' => $this->faker->numberBetween(1, 100),
             'total_harga' => $this->faker->numberBetween(1000, 1000000),

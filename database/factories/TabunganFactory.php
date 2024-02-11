@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Nasabah;
+use App\Models\Tabungan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,11 +19,7 @@ class TabunganFactory extends Factory
     public function definition(): array
     {
         return [
-            'nasabah_id' => Nasabah::factory(),
-            'debit' => $this->faker->randomNumber(5),
-            'kredit' => $this->faker->randomNumber(5),
             'saldo' => $this->faker->randomNumber(5),
-            'keterangan' => $this->faker->word(),
             'status' => $this->faker->randomElement(['Aktif', 'Nonaktif']),
         ];
     }

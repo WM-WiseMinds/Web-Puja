@@ -1,4 +1,12 @@
 <div class="p-2 bg-white border border-slate-200">
+    {{-- @php
+        $saldo = intval($row->saldo);
+        foreach ($row->historyTabungan as $historyTabungan) {
+            $debit = intval($historyTabungan->debit);
+            $kredit = intval($historyTabungan->kredit);
+            $saldo = $saldo + $debit - $kredit;
+        }
+    @endphp --}}
     <table class="table-auto w-full">
         <tbody>
             <tr>
