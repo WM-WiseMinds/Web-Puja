@@ -13,6 +13,6 @@ class SampahSeeder extends Seeder
      */
     public function run(): void
     {
-        Sampah::factory()->count(15)->create();
+        Sampah::factory()->count(50)->create();
     }
 }
