@@ -24,6 +24,9 @@ return new class extends Migration
             // Kolom barang_id adalah foreign key yang terhubung ke tabel 'barang' dan akan melakukan cascade delete
             $table->foreignId('barang_id')->constrained('barang')->onDelete('cascade');
 
+            // Kolom harga_barang adalah data yang akan menyimpan harga barang saat terjadinya penukaran
+            $table->integer('harga_barang_saat_tukar');
+
             // Kolom 'timestamps' akan secara otomatis mencatat waktu pembuatan dan pembaruan record
             $table->timestamps();
         });

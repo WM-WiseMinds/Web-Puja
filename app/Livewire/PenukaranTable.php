@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\HistoryTabungan;
 use App\Models\Penukaran;
 use App\Models\Tabungan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Masmerise\Toaster\Toastable;
@@ -60,7 +61,8 @@ final class PenukaranTable extends PowerGridComponent
             ->add('id')
             ->add('nama_nasabah')
             ->add('nama_barang')
-            ->add('created_at');
+            ->add('harga_barang_saat_tukar', fn (Penukaran $model) => 'Rp ' . number_format($model->harga_barang_saat_tukar, 0, ',', '.'))
+            ->add('created_at_formatted', fn (Penukaran $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
     }
 
     public function columns(): array
@@ -69,8 +71,9 @@ final class PenukaranTable extends PowerGridComponent
             Column::make('Id', 'id'),
             Column::make('Nama Nasabah', 'nama_nasabah')->sortable()->searchable(),
             Column::make('Nama Barang', 'nama_barang')->sortable()->searchable(),
+            Column::make('Harga Barang', 'harga_barang_saat_tukar')->sortable()->searchable(),
 
-            Column::make('Created at', 'created_at')
+            Column::make('Tanggal Penukaran', 'created_at_formatted')
                 ->sortable()
                 ->searchable(),
 
@@ -182,14 +185,7 @@ final class PenukaranTable extends PowerGridComponent
         // Menyimpan file pdf ke folder pdf
         $pdf->save($path . '/penukaran.pdf');
         // Menampilkan file pdf
-        // return response()->download($path . '/penukaran.pdf');
-
-        // Download the file
-        $response = response()->download($path . '/penukaran.pdf');
-
-        DeleteFile::dispatch($path . '/penukaran.pdf')->delay(now()->addMinutes(1));
-
-        return $response;
+        return response()->download($path . '/penukaran.pdf');
     }
 
     // Function to delete data

@@ -16,6 +16,7 @@ class Penukaran extends Model
     protected $fillable = [
         'tabungan_id',
         'barang_id',
+        'harga_barang_saat_tukar'
     ];
 
     public function barang()

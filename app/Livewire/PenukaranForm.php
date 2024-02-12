@@ -42,12 +42,13 @@ class PenukaranForm extends ModalComponent
             return;
         }
 
+        $barang = Barang::find($this->barang_id);
         $this->penukaran->fill($validatedData);
+        $this->penukaran->harga_barang_saat_tukar = $barang->harga_barang;
         $this->penukaran->save();
         $this->success($this->penukaran->wasRecentlyCreated ? 'Penukaran berhasil ditambahkan' : 'Penukaran berhasil diubah');
 
         // Kurangi stok barang
-        $barang = Barang::find($this->barang_id);
         $barang->stok_barang -= 1;
         $barang->save();
 
