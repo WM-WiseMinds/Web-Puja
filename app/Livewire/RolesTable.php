@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Detail;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Footer;
@@ -35,16 +36,19 @@ final class RolesTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+            Detail::make()
+                ->view('details.roles-detail')
+                ->showCollapseIcon(),
         ];
     }
 
     public function datasource(): Builder
     {
-        return Roles::query()
-            ->leftJoin('role_permissions', 'roles.id', '=', 'role_permissions.role_id')
-            ->leftJoin('permissions', 'role_permissions.permission_id', '=', 'permissions.id')
-            ->groupBy('roles.id', 'roles.name', 'roles.created_at') // Tambahkan semua kolom yang Anda pilih dari tabel `roles` di sini
-            ->selectRaw('roles.id, roles.name, roles.created_at, GROUP_CONCAT(permissions.name SEPARATOR ", ") as permissions');
+        return Roles::query()->with(['permissions']);
+        // ->leftJoin('role_permissions', 'roles.id', '=', 'role_permissions.role_id')
+        // ->leftJoin('permissions', 'role_permissions.permission_id', '=', 'permissions.id')
+        // ->groupBy('roles.id', 'roles.name', 'roles.created_at') // Tambahkan semua kolom yang Anda pilih dari tabel `roles` di sini
+        // ->selectRaw('roles.id, roles.name, roles.created_at, SUBSTRING_INDEX(GROUP_CONCAT(permissions.name ORDER BY permissions.id SEPARATOR ", "), ", ", 3) as permissions');
     }
 
     public function relationSearch(): array
@@ -67,8 +71,6 @@ final class RolesTable extends PowerGridComponent
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Permissions', 'permissions')
-                ->sortable(),
             Column::make('Created at', 'created_at')
                 ->sortable()
                 ->searchable(),
