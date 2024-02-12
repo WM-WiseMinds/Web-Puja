@@ -13,8 +13,8 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Roles::findOrFail(1)->permissions()->sync([1, 2, 3, 4]);
-        Roles::findOrFail(2)->permissions()->sync([1, 2, 3]);
-        Roles::findOrFail(3)->permissions()->sync([1, 2]);
+        Roles::findOrFail(1)->permissions()->sync([1, 2, 3, 4, 5]);
+        Roles::findOrFail(2)->permissions()->sync([2]);
+        Roles::findOrFail(3)->permissions()->sync([5]);
     }
 }

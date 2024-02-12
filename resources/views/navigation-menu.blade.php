@@ -46,7 +46,7 @@
                         <span class="ml-4">Roles</span>
                     </x-nav-link>
                 </li>
-                @can('create-user')
+                @can('create-users')
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('users') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')"
