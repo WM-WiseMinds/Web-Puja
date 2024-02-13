@@ -25,7 +25,7 @@ class PenukaranForm extends ModalComponent
     public function render()
     {
         $tabungan = Tabungan::with('nasabah.user')->get();
-        $barang = Barang::all();
+        $barang = Barang::where('status', 'Aktif')->get();
         return view('livewire.penukaran-form', compact('tabungan', 'barang'));
     }
 
@@ -73,8 +73,8 @@ class PenukaranForm extends ModalComponent
 
     public function mount($rowId = null)
     {
-        $this->barang = Barang::all();
-        $this->tabungan = Tabungan::with('nasabah.user')->get();
+        $this->barang = Barang::where('status', 'Aktif')->get();
+        $this->tabungan = Tabungan::with('nasabah.user')->where('status', 'Aktif')->get();
         $this->penukaran = $rowId ? Penukaran::find($rowId) : new Penukaran;
         if ($this->penukaran->exists) {
             $this->tabungan_id = $this->penukaran->tabungan_id;

@@ -26,7 +26,7 @@ class TransaksiForm extends ModalComponent
     public function render()
     {
         $transaksi = Transaksi::all();
-        $nasabah = Nasabah::all();
+        $nasabah = Nasabah::where('status', 'Aktif')->get();
         $user = User::all();
         return view('livewire.transaksi-form', compact('transaksi', 'nasabah', 'user'));
     }
@@ -69,7 +69,7 @@ class TransaksiForm extends ModalComponent
     public function mount($rowId = null)
     {
         $this->user = User::all();
-        $this->nasabah = Nasabah::all();
+        $this->nasabah = Nasabah::where('status', 'Aktif')->get();
         $this->transaksi = $rowId ? Transaksi::find($rowId) : new Transaksi;
         if ($this->transaksi->exists) {
             $this->nasabah_id = $this->transaksi->nasabah_id;
