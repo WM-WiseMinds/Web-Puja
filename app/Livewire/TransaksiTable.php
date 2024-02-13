@@ -33,6 +33,7 @@ final class TransaksiTable extends PowerGridComponent
         $setup = [
             Header::make()->showSearchInput(),
             Footer::make()->showPerPage()->showRecordCount(),
+            Detail::make()->view('details.transaksi-detail')->showCollapseIcon(),
         ];
 
         if (auth()->check() && auth()->user()->can('export-transaksi')) {
@@ -162,7 +163,7 @@ final class TransaksiTable extends PowerGridComponent
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
                 ->dispatch('delete', ['rowId' => $row->id]);
         }
-        return [];
+        return $actions;
     }
 
     public function header(): array

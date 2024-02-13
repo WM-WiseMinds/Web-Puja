@@ -158,6 +158,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role->permissions->pluck('slug')->contains('delete-tabungan');
         });
 
+        Gate::define('withdraw-tabungan', function (User $user) {
+            return $user->role->permissions->pluck('slug')->contains('withdraw-tabungan');
+        });
+
         Gate::define('export-tabungan', function (User $user) {
             return $user->role->permissions->pluck('slug')->contains('export-tabungan');
         });

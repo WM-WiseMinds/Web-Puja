@@ -31,6 +31,7 @@ final class BarangTable extends PowerGridComponent
         $setup = [
             Header::make()->showSearchInput(),
             Footer::make()->showPerPage()->showRecordCount(),
+            Detail::make()->view('details.barang-detail')->showCollapseIcon(),
         ];
 
         if (auth()->check() && auth()->user()->can('export-users')) {

@@ -29,6 +29,7 @@ final class TabunganTable extends PowerGridComponent
         $setup = [
             Header::make()->showSearchInput(),
             Footer::make()->showPerPage()->showRecordCount(),
+            Detail::make()->view('details.tabungan-detail')->showCollapseIcon(),
         ];
 
         if (auth()->check() && auth()->user()->can('export-tabungan')) {
@@ -74,7 +75,6 @@ final class TabunganTable extends PowerGridComponent
 
     public function columns(): array
     {
-        $status = true;
         return [
             Column::make('Id', 'id')->sortable(),
             Column::make('Nama Nasabah', 'nama')->sortable()->searchable(),
@@ -159,7 +159,7 @@ final class TabunganTable extends PowerGridComponent
                 'bulkExportPdf',
                 'delete',
                 'tabunganUpdated' => '$refresh',
-                'withdrawUpdated' => '$refresh',
+                'withDrawUpdated' => '$refresh',
             ]
         );
     }

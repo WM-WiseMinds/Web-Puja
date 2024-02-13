@@ -31,6 +31,7 @@ final class RolesTable extends PowerGridComponent
         $setup = [
             Header::make()->showSearchInput(),
             Footer::make()->showPerPage()->showRecordCount(),
+            Detail::make()->view('details.roles-detail')->showCollapseIcon(),
         ];
 
         if (auth()->check() && auth()->user()->can('export-roles')) {
