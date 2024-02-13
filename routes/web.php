@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\Barang;
+use App\Models\Nasabah;
+use App\Models\Penukaran;
+use App\Models\Sampah;
+use App\Models\Tabungan;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::middleware([
@@ -23,7 +29,13 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $userCount = User::count();
+        $sampahCount = Sampah::count();
+        $barangCount = Barang::count();
+        $tabunganCount = Tabungan::count();
+        $penukaranCount = Penukaran::count();
+        $nasabahCount = Nasabah::count();
+        return view('dashboard', compact('userCount', 'sampahCount', 'barangCount', 'penukaranCount', 'nasabahCount', 'tabunganCount'));
     })->name('dashboard');
 
     Route::get('/permissions', function () {

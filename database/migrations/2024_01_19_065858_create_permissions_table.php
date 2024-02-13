@@ -18,6 +18,9 @@ return new class extends Migration
             // Menambahkan kolom 'name' dengan tipe data varchar (string) dan panjang 128 karakter
             $table->string('name');
 
+            // Menambahkan kolom 'slug' dengan tipe data varchar (string) dan panjang 128 karakter
+            $table->string('slug')->nullable();
+
             // Menambahkan kolom timestamps untuk otomatis mengelola waktu pembuatan dan pembaruan
             $table->timestamps();
         });

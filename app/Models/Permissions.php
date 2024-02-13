@@ -16,7 +16,9 @@ class Permissions extends Model
     //  protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel permissions
     protected $fillable = [
         'name',
+        'slug'
     ];
+
 
     // Relasi antara model Permissions dengan model Roles (Satu permission memiliki banyak roles)
     public function roles()

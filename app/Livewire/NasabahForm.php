@@ -17,7 +17,7 @@ class NasabahForm extends ModalComponent
     use WithFileUploads;
 
     public Nasabah $nasabah;
-    public $user, $user_id, $alamat, $no_hp, $jenis_kelamin, $status, $foto;
+    public $users, $user_id, $alamat, $no_hp, $jenis_kelamin, $status, $foto;
 
     protected $rules = [
         'user_id' => 'required|exists:users,id',
@@ -31,7 +31,7 @@ class NasabahForm extends ModalComponent
     public function render()
     {
         $nasabah = Nasabah::all();
-        $users = User::all();
+        $users = User::where('status', 'Aktif')->get();
         return view('livewire.nasabah-form', compact('nasabah', 'users'));
     }
 
@@ -79,7 +79,7 @@ class NasabahForm extends ModalComponent
 
     public function mount($rowId = null)
     {
-        $this->user = User::all();
+        $this->users = User::where('status', 'Aktif')->get();
         $this->nasabah = $rowId ? Nasabah::findOrFail($rowId) : new Nasabah;
         if ($this->nasabah->exists) {
             $this->user_id = $this->nasabah->user_id;
