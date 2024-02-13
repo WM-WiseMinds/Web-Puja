@@ -1,7 +1,7 @@
 
 # Sistem Informasi Bank Sampah Desa Cau Blayu
 
-Sistem Informasi Pengelolaan Data Bank Sampah Desa Cau Belayu adalah sebuah aplikasi web yang dirancang untuk membantu pengelolaan data bank sampah di desa tersebut. Sistem ini dibuat dengan menggunakan framework Laravel 10.x dan teknologi lainnya seperti Jetstream 4.x, Tailwind 3.x, Livewire 3.x.
+Sistem Informasi Pengelolaan Data Bank Sampah Desa Cau Belayu adalah sebuah aplikasi web yang dirancang untuk membantu pengelolaan data bank sampah di desa tersebut. Sistem ini dibuat dengan menggunakan bahasa pemrograman PHP 8.3 dilengkapi dengan framework Laravel 10.x dan teknologi lainnya seperti Jetstream 4.x, Tailwind 3.x, Livewire 3.x.
 
 
 
@@ -17,6 +17,13 @@ Sistem Informasi Pengelolaan Data Bank Sampah Desa Cau Belayu adalah sebuah apli
 - Kelola Data Penukaran
 - Cetak Laporan melalui PDF/XLSX/CSV
 
+
+
+## Tech Stack
+
+**Client:** Livewire, Jetstream, TailwindCSS
+
+**Server:** Laravel
 
 
 ## Instalasi Project
@@ -57,5 +64,4 @@ Password
 
 - [@wirabudhi](https://github.com/wirabudhi)
 - [@Missuyaa](https://github.com/Missuyaa)
-
 
