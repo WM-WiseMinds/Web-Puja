@@ -53,7 +53,7 @@ Password
 ```
 
 
-## Authors
+## Contributors
 
 - [@wirabudhi](https://github.com/wirabudhi)
 - [@Missuyaa](https://github.com/Missuyaa)
