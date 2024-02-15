@@ -40,7 +40,6 @@ class PermissionSeeder extends Seeder
             'Delete Transaksi',
             'Export Transaksi',
             'Create Tabungan',
-            'Edit Tabungan',
             'Read Tabungan',
             'Update Tabungan',
             'Delete Tabungan',
