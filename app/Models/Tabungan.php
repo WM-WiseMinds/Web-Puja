@@ -57,7 +57,7 @@ class Tabungan extends Model
     }
 
 
-    public function updateSaldo($jumlah, $jenis = 'debit', $keterangan = '', $created_at = null)
+    public function updateSaldo($jumlah, $jenis = 'debit', $operation = 'increment', $keterangan = '', $created_at = null)
     {
         // Try to find an existing history record
         $historyTabungan = HistoryTabungan::where('tabungan_id', $this->id)
@@ -66,11 +66,18 @@ class Tabungan extends Model
             ->first();
 
         if ($historyTabungan) {
-            // If a history record exists, update it
             if ($jenis === 'debit') {
-                $historyTabungan->increment('debit', $jumlah);
+                if ($operation === 'increment') {
+                    $historyTabungan->increment('debit', $jumlah);
+                } else {
+                    $historyTabungan->decrement('debit', $jumlah);
+                }
             } else {
-                $historyTabungan->decrement('kredit', $jumlah);
+                if ($operation === 'increment') {
+                    $historyTabungan->increment('kredit', $jumlah);
+                } else {
+                    $historyTabungan->decrement('kredit', $jumlah);
+                }
             }
         }
     }

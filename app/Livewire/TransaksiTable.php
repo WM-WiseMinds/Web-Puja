@@ -262,16 +262,16 @@ final class TransaksiTable extends PowerGridComponent
     public function deleteSampah($sampah_id)
     {
         $sampah = Sampah::find($sampah_id);
+        $sampah->created_at;
         if ($sampah) {
             // Hitung total harga sampah
             $totalHargaSampah = $sampah->jumlah_sampah * $sampah->harga_sampah;
-
             // Dapatkan tabungan nasabah
             $tabungan = Tabungan::where('nasabah_id', $sampah->transaksi->nasabah_id)->first();
 
             if ($tabungan) {
                 // Kurangi total harga sampah dari saldo tabungan
-                $tabungan->updateSaldo($totalHargaSampah, 'kredit', 'Penghapusan Data Sampah');
+                $tabungan->updateSaldo($totalHargaSampah, 'debit', 'decrement', 'Penjualan Sampah', $sampah->created_at);
             }
 
             $sampah->delete();
