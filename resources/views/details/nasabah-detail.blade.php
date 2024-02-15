@@ -7,7 +7,7 @@
             </tr>
             @if ($row->foto)
                 <tr>
-                    <td class="border px-4 py-2 text-sm font-semibold">Bukti Kehadiran</td>
+                    <td class="border px-4 py-2 text-sm font-semibold">Foto</td>
                     <td class="border px-4 py-2">
                         <img src="{{ asset('storage/' . $row->foto) }}" alt="Foto" class="w-32 h-32 object-cover mb-5">
                         <x-button>
@@ -39,7 +39,7 @@
             </tr>
             <tr>
             <tr>
-                <td class="border px-4 py-2 text-sm font-semibold">Waktu Kehadiran</td>
+                <td class="border px-4 py-2 text-sm font-semibold">Created At</td>
                 <td class="border px-4 py-2">{{ $row->created_at }}</td>
             </tr>
         </tbody>

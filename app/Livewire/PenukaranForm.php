@@ -55,11 +55,17 @@ class PenukaranForm extends ModalComponent
         $tabungan = Tabungan::find($this->penukaran->tabungan_id);
         $harga = $this->penukaran->barang->harga_barang;
         $created_at = $this->penukaran->created_at;
-        if ($this->penukaran->wasRecentlyCreated) {
-            // dd($this->penukaran->wasRecentlyCreated);
-            $tabungan->createSaldo($harga, 'kredit', 'Penukaran barang');
+
+        $historyTabungan = HistoryTabungan::where('tabungan_id', $tabungan->id)
+            ->where('keterangan', 'Penukaran barang')
+            ->where('created_at', $created_at)
+            ->first();
+
+        if ($historyTabungan) {
+            $historyTabungan->kredit = $harga;
+            $historyTabungan->save();
         } else {
-            $tabungan->updateSaldo($harga, 'kredit', 'Penukaran barang', $created_at);
+            $tabungan->createSaldo($harga, 'kredit', 'Penukaran barang');
         }
 
         $this->success('Saldo berhasil dikurangi');

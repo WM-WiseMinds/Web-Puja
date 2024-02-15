@@ -67,9 +67,11 @@ class Tabungan extends Model
 
         if ($historyTabungan) {
             // If a history record exists, update it
-            $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
-            $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
-            $historyTabungan->save();
+            if ($jenis === 'debit') {
+                $historyTabungan->increment('debit', $jumlah);
+            } else {
+                $historyTabungan->decrement('kredit', $jumlah);
+            }
         }
     }
 

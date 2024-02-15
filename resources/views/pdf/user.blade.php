@@ -7,7 +7,6 @@
                 <th style="border: 1px solid black; padding: 5px; text-align: left;">Nama</th>
                 <th style="border: 1px solid black; padding: 5px; text-align: left;">Email</th>
                 <th style="border: 1px solid black; padding: 5px; text-align: left;">Role Name</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">No HP</th>
                 <th style="border: 1px solid black; padding: 5px; text-align: left;">Status</th>
             </tr>
         </thead>
@@ -21,9 +20,6 @@
                     </td>
                     <td style="border: 1px solid black; padding: 5px; text-align: left;">
                         {{ $user->role_name }}
-                    </td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                        {{ $user->no_hp }}
                     </td>
                     <td style="border: 1px solid black; padding: 5px; text-align: left;">
                         {{ $user->status }}
