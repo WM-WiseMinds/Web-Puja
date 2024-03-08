@@ -25,7 +25,7 @@ class TransaksiForm extends ModalComponent
         $this->user_id = auth()->user()->id;
         $this->user_name = auth()->user()->name;
         $this->nasabah = Nasabah::where('status', 'Aktif')->get();
-        $this->tgl_transaksi = $this->transaksi->tgl_transaksi;
+        $this->nasabah_id = $this->transaksi->nasabah_id;
         $this->total_sampah = $this->total_sampah;
         $this->total_harga = $this->total_harga;
         $this->status = $rowId ? $this->transaksi->status : 'Aktif';
@@ -36,9 +36,8 @@ class TransaksiForm extends ModalComponent
         return [
             'user_id' => 'required|exists:users,id',
             'nasabah_id' => 'required|exists:nasabah,id',
-            'tgl_transaksi' => 'required',
-            'total_sampah' => 'required',
-            'total_harga' => 'required',
+            // 'total_sampah' => 'required',
+            // 'total_harga' => 'required',
             'status' => 'required',
         ];
     }
