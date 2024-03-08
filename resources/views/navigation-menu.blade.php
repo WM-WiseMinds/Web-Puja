@@ -3,9 +3,11 @@
     <aside
         class="z-10 hidden w-64 overflow-y-auto bg-gradient-to-t from-emerald-700 to-emerald-600 dark:bg-gray-800 md:block flex-shrink-0">
         <div class="py-6 text-white dark:text-gray-400 text-center">
-            <a href="{{ route('dashboard') }}" class="mx-5 text-lg font-bold text-white dark:text-gray-200">
-                SISTEM BANK SAMPAH CAU BlAYU
-            </a>
+            <div class="mx-5">
+                <a href="{{ route('dashboard') }}" class="text-lg font-bold text-white dark:text-gray-200">
+                    SISTEM BANK SAMPAH CAU BlAYU
+                </a>
+            </div>
             <ul class="mt-6">
                 <li
                     class="relative px-6 py-3 {{ request()->routeIs('dashboard') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
