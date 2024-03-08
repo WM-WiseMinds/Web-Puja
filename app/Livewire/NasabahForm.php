@@ -6,7 +6,6 @@ use App\Models\Nasabah;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use LivewireUI\Modal\ModalComponent;
 use Masmerise\Toaster\Toastable;
@@ -17,56 +16,64 @@ class NasabahForm extends ModalComponent
     use WithFileUploads;
 
     public Nasabah $nasabah;
-    public $users, $user_id, $alamat, $no_hp, $jenis_kelamin, $status, $foto;
+    public $id, $users, $user_id, $alamat, $no_hp, $jenis_kelamin, $status, $foto, $foto_url;
 
-    protected $rules = [
-        'user_id' => 'required|exists:users,id',
-        'alamat' => 'required|min:3',
-        'no_hp' => 'required|min:3',
-        'jenis_kelamin' => 'required',
-        'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'status' => 'required',
-    ];
-
-    public function render()
+    public function mount($rowId = null)
     {
-        $nasabah = Nasabah::all();
-        $users = User::where('status', 'Aktif')->get();
-        return view('livewire.nasabah-form', compact('nasabah', 'users'));
+        $this->nasabah = Nasabah::findOrNew($rowId);
+        $this->users = User::whereHas('role', function ($query) {
+            $query->where('name', 'Nasabah');
+        })->where('status', 'Aktif')->get();
+        $this->id = $this->nasabah->id;
+        $this->user_id = $this->nasabah->user_id;
+        $this->alamat = $this->nasabah->alamat;
+        $this->no_hp = $this->nasabah->no_hp;
+        $this->jenis_kelamin = $this->nasabah->jenis_kelamin;
+        $this->status = $rowId ? $this->nasabah->status : 'Aktif';
+        $this->foto = $this->nasabah->foto;
+
+        if ($this->nasabah->foto) {
+            $this->foto_url = Storage::disk('public')->url('nasabah-foto/' . $this->nasabah->foto);
+        }
     }
 
-    public function resetCreateForm()
+    public function rules()
+    {
+        return [
+            'user_id' => 'required|exists:users,id',
+            'alamat' => 'required|min:3',
+            'no_hp' => 'required|min:3',
+            'jenis_kelamin' => 'required',
+            'status' => 'required',
+            'foto' => $this->foto instanceof UploadedFile ? ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'] : ['nullable'],
+        ];
+    }
+
+    public function resetForm()
     {
         $this->reset(['user_id', 'alamat', 'no_hp', 'jenis_kelamin', 'status', 'foto']);
     }
 
     public function store()
     {
-        if ($this->foto instanceof UploadedFile && $this->foto->isValid()) {
-            $validatedData = $this->validate();
+        $validatedData = $this->validate();
 
-            // Delete the old photo if it exists
+        if ($this->foto instanceof UploadedFile) {
+            $originalName = pathinfo($this->foto->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $this->foto->getClientOriginalExtension();
+            $fileName = time() . '_' . $originalName . '.' . $extension;
+
             if ($this->nasabah->foto) {
-                Storage::disk('public')->delete($this->nasabah->foto);
+                Storage::disk('public')->delete('nasabah-foto/' . $this->nasabah->foto);
             }
 
-            // Store the new photo
-            $validatedData['foto'] = $validatedData['foto']->store('nasabah-foto', 'public');
+            $this->foto->storeAs('public/nasabah-foto', $fileName);
+            $validatedData['foto'] = $fileName;
         } else {
-            $validatedData = $this->validate([
-                'user_id' => 'required|exists:users,id',
-                'alamat' => 'required|min:3',
-                'no_hp' => 'required|min:3',
-                'jenis_kelamin' => 'required',
-                'status' => 'required',
-            ]);
-
-            // Keep the old photo
             $validatedData['foto'] = $this->nasabah->foto;
         }
 
-        $this->nasabah->fill($validatedData);
-        $this->nasabah->save();
+        $this->nasabah = Nasabah::updateOrCreate(['id' => $this->id], $validatedData);
 
         $this->success($this->nasabah->wasRecentlyCreated ? 'Nasabah berhasil ditambahkan' : 'Nasabah berhasil diupdate');
 
@@ -74,20 +81,11 @@ class NasabahForm extends ModalComponent
             NasabahTable::class => 'nasabahUpdated',
         ]);
 
-        $this->resetCreateForm();
+        $this->resetForm();
     }
 
-    public function mount($rowId = null)
+    public function render()
     {
-        $this->users = User::where('status', 'Aktif')->get();
-        $this->nasabah = $rowId ? Nasabah::findOrFail($rowId) : new Nasabah;
-        if ($this->nasabah->exists) {
-            $this->user_id = $this->nasabah->user_id;
-            $this->alamat = $this->nasabah->alamat;
-            $this->no_hp = $this->nasabah->no_hp;
-            $this->jenis_kelamin = $this->nasabah->jenis_kelamin;
-            $this->foto = $this->nasabah->foto;
-            $this->status = $this->nasabah->status;
-        }
+        return view('livewire.nasabah-form');
     }
 }
