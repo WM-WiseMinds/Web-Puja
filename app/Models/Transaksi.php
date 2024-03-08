@@ -18,7 +18,6 @@ class Transaksi extends Model
         'user_id',
         'nasabah_id',
         'total_sampah',
-        'total_berat',
         'total_harga',
         'status',
     ];

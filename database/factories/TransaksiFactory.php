@@ -22,7 +22,6 @@ class TransaksiFactory extends Factory
             'user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
             'nasabah_id' => $this->faker->randomElement(Nasabah::pluck('id')->toArray()),
             'total_sampah' => $this->faker->numberBetween(1, 100),
-            'total_berat' => $this->faker->numberBetween(1, 100),
             'total_harga' => $this->faker->numberBetween(1000, 1000000),
             'status' => $this->faker->randomElement(['Aktif', 'Nonaktif']),
         ];

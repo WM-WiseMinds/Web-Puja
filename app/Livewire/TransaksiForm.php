@@ -6,6 +6,7 @@ use App\Models\Nasabah;
 use App\Models\Tabungan;
 use App\Models\Transaksi;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use LivewireUI\Modal\ModalComponent;
 use Masmerise\Toaster\Toastable;
@@ -15,42 +16,49 @@ class TransaksiForm extends ModalComponent
     use Toastable;
 
     public Transaksi $transaksi;
-    public $user, $user_id, $nasabah, $nasabah_id, $tgl_transaksi, $total_sampah, $total_berat, $total_harga, $status;
+    public $id, $user_name, $user_id, $nasabah, $nasabah_id, $tgl_transaksi, $total_sampah, $total_harga, $status;
 
-    protected $rules = [
-        'nasabah_id' => 'required|exists:nasabah,id',
-        'total_berat' => 'required|numeric|min:0',
-        'status' => 'required',
-    ];
-
-    public function render()
+    public function mount($rowId = null)
     {
-        $transaksi = Transaksi::all();
-        $nasabah = Nasabah::where('status', 'Aktif')->get();
-        $user = User::all();
-        return view('livewire.transaksi-form', compact('transaksi', 'nasabah', 'user'));
+        $this->id = $rowId;
+        $this->transaksi = $rowId ? Transaksi::find($rowId) : new Transaksi();
+        $this->user_id = auth()->user()->id;
+        $this->user_name = auth()->user()->name;
+        $this->nasabah = Nasabah::where('status', 'Aktif')->get();
+        $this->tgl_transaksi = $this->transaksi->tgl_transaksi;
+        $this->total_sampah = $this->total_sampah;
+        $this->total_harga = $this->total_harga;
+        $this->status = $rowId ? $this->transaksi->status : 'Aktif';
     }
 
-    public function resetCreateForm()
+    public function rules()
     {
-        $this->reset(['nasabah_id', 'tgl_transaksi', 'total_sampah', 'total_berat', 'total_harga', 'status']);
+        return [
+            'user_id' => 'required|exists:users,id',
+            'nasabah_id' => 'required|exists:nasabah,id',
+            'tgl_transaksi' => 'required',
+            'total_sampah' => 'required',
+            'total_harga' => 'required',
+            'status' => 'required',
+        ];
+    }
+
+    public function resetForm()
+    {
+        $this->reset(['user_id', 'nasabah_id', 'tgl_transaksi', 'total_sampah', 'total_harga', 'status']);
     }
 
     public function store()
     {
         $validatedData = $this->validate();
-        $validatedData['user_id'] = auth()->id();
 
-        // Get the original nasabah_id before the update
-        $originalNasabahId = $this->transaksi->nasabah_id;
+        $nasabahId = $this->transaksi->nasabah_id;
 
-        $this->transaksi->fill($validatedData);
-        $this->transaksi->save();
+        $this->transaksi = Transaksi::updateOrCreate(['id' => $this->id], $validatedData);
 
-        // If the nasabah_id has been updated
-        if ($originalNasabahId !== $this->transaksi->nasabah_id) {
-            // Update the nasabah_id in the Tabungan
-            $tabungan = Tabungan::where('nasabah_id', $originalNasabahId)->first();
+        if ($nasabahId !== $this->transaksi->nasabah_id) {
+            $tabungan = Tabungan::where('nasabah_id', $nasabahId)->first();
+
             if ($tabungan) {
                 $tabungan->nasabah_id = $this->transaksi->nasabah_id;
                 $tabungan->save();
@@ -63,22 +71,11 @@ class TransaksiForm extends ModalComponent
             TransaksiTable::class => 'transaksiUpdated',
         ]);
 
-        $this->resetCreateForm();
+        $this->resetForm();
     }
 
-    public function mount($rowId = null)
+    public function render()
     {
-        $this->user = User::all();
-        $this->nasabah = Nasabah::where('status', 'Aktif')->get();
-        $this->transaksi = $rowId ? Transaksi::find($rowId) : new Transaksi;
-        if ($this->transaksi->exists) {
-            $this->nasabah_id = $this->transaksi->nasabah_id;
-            $this->user_id = $this->transaksi->user_id;
-            $this->tgl_transaksi = $this->transaksi->tgl_transaksi;
-            $this->total_sampah = $this->transaksi->total_sampah;
-            $this->total_berat = $this->transaksi->total_berat;
-            $this->total_harga = $this->transaksi->total_harga;
-            $this->status = $this->transaksi->status;
-        }
+        return view('livewire.transaksi-form');
     }
 }

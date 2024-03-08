@@ -25,9 +25,6 @@ return new class extends Migration
             // Kolom total_sampah akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
             $table->integer('total_sampah')->nullable()->default(0);
 
-            // Kolom total_berat akan menyimpan total berat sampah dalam transaksi (maksimal 11 digit)
-            $table->integer('total_berat');
-
             // Kolom total_harga akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
             $table->integer('total_harga')->nullable()->default(0);
 
