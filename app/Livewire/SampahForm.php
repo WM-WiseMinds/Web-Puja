@@ -6,6 +6,7 @@ use App\Models\HistoryTabungan;
 use App\Models\Sampah;
 use App\Models\Tabungan;
 use App\Models\Transaksi;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use LivewireUI\Modal\ModalComponent;
 use Masmerise\Toaster\Toastable;
@@ -15,22 +16,37 @@ class SampahForm extends ModalComponent
     use Toastable;
 
     public Sampah $sampah;
-    public $transaksi, $jenis_sampah, $nama_sampah, $harga_sampah, $jumlah_sampah, $transaksi_id;
+    public $id, $transaksi, $jenis_sampah, $nama_sampah, $harga_sampah, $jumlah_sampah, $transaksi_id;
     public $sampahItems = [];
 
-    public function render()
+    public function mount($transaksi_id = null, $sampah_id = null)
     {
-        $transaksi = Transaksi::all();
-        return view('livewire.sampah-form', compact('transaksi'));
+        $this->sampah = Sampah::findOrNew($sampah_id);
+        $this->transaksi_id = $transaksi_id ? $transaksi_id : $this->sampah->transaksi_id;
+        if ($this->sampah->exists) {
+            $this->sampahItems = [
+                [
+                    'jenis_sampah' => $this->sampah->jenis_sampah,
+                    'nama_sampah' => $this->sampah->nama_sampah,
+                    'harga_sampah' => $this->sampah->harga_sampah,
+                    'jumlah_sampah' => $this->sampah->jumlah_sampah,
+                ]
+            ];
+        } else {
+            $this->sampahItems = [];
+        }
     }
 
-    protected $rules = [
-        'transaksi_id' => 'required|exists:transaksi,id',
-        'jenis_sampah' => 'required',
-        'nama_sampah' => 'required',
-        'harga_sampah' => 'required|numeric|min:0',
-        'jumlah_sampah' => 'required|numeric|min:0',
-    ];
+    public function rules()
+    {
+        return [
+            'transaksi_id' => 'required|exists:transaksi,id',
+            'sampahItems.*.jenis_sampah' => 'required',
+            'sampahItems.*.nama_sampah' => 'required',
+            'sampahItems.*.harga_sampah' => 'required|numeric|min:0',
+            'sampahItems.*.jumlah_sampah' => 'required|numeric|min:0',
+        ];
+    }
 
     public function addSampahItem()
     {
@@ -43,43 +59,46 @@ class SampahForm extends ModalComponent
         $this->sampahItems = array_values($this->sampahItems);
     }
 
-    public function resetCreateForm()
+    public function resetForm()
     {
-        $this->reset(['transaksi_id', 'jenis_sampah', 'nama_sampah', 'harga_sampah', 'jumlah_sampah']);
+        $this->reset(['transaksi_id']);
+        $this->sampah = new Sampah();
+        $this->sampahItems = [['jenis_sampah' => '', 'nama_sampah' => '', 'harga_sampah' => '', 'jumlah_sampah' => '']];
     }
 
     public function store()
     {
-        $validatedData = $this->validate([
-            'transaksi_id' => 'required|exists:transaksi,id',
-            'sampahItems.*.jenis_sampah' => 'required',
-            'sampahItems.*.nama_sampah' => 'required',
-            'sampahItems.*.harga_sampah' => 'required|numeric|min:0',
-            'sampahItems.*.jumlah_sampah' => 'required|numeric|min:0',
-        ]);
+        $this->validate();
 
         DB::beginTransaction();
         try {
             $perubahanSaldo = 0;
             foreach ($this->sampahItems as $item) {
-                $hargaTotalSampahSebelumnya = 0;
-                if ($this->sampah->exists) {
-                    // Updating an existing Sampah
-                    $hargaTotalSampahSebelumnya = $this->sampah->jumlah_sampah * $this->sampah->harga_sampah;
-                    $this->sampah->update($item);
-                    $this->success('Sampah berhasil diubah');
+                if ($this->sampah->id) {
+                    $sampah = Sampah::find($this->sampah->id);
+                    $hargaSebelumnya = $sampah->harga_sampah;
+                    $jumlahSebelumnya = $sampah->jumlah_sampah;
                 } else {
-                    // Creating a new Sampah
-                    $sampah = new Sampah();
-                    $sampah->fill($item);
-                    $sampah->transaksi_id = $this->transaksi_id;
-                    $sampah->save();
-                    $this->success('Sampah berhasil ditambahkan');
+                    $hargaSebelumnya = 0;
+                    $jumlahSebelumnya = 0;
                 }
 
+                $sampah = Sampah::updateOrCreate(
+                    ['id' => $this->sampah->id],
+                    array_merge($item, ['transaksi_id' => $this->transaksi_id])
+                );
+
+                $hargaTotalSampahSebelumnya = $hargaSebelumnya * $jumlahSebelumnya;
                 $hargaTotalSampahBaru = $item['harga_sampah'] * $item['jumlah_sampah'];
-                $perubahanSaldo += ($hargaTotalSampahBaru - $hargaTotalSampahSebelumnya);
+
+                $perubahanSaldo += $hargaTotalSampahBaru - $hargaTotalSampahSebelumnya;
             }
+
+            $tabungan = Tabungan::firstOrCreate([
+                'nasabah_id' => Transaksi::find($this->transaksi_id)->nasabah_id,
+            ], [
+                'saldo' => 0,
+            ]);
 
             if ($perubahanSaldo != 0) {
                 $tabungan = Tabungan::firstOrCreate([
@@ -105,35 +124,16 @@ class SampahForm extends ModalComponent
                 TransaksiTable::class => 'sampahUpdated',
             ]);
 
-            $this->resetCreateForm();
+            $this->resetForm();
+            $this->success('Data sampah berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->error('Terjadi kesalahan' . $e->getMessage());
+            $this->error('Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-    public function mount($transaksi_id = null, $sampah_id = null)
+    public function render()
     {
-        $this->transaksi_id = $transaksi_id;
-        $this->transaksi = Transaksi::all();
-
-        if ($sampah_id) {
-            // Editing an existing Sampah
-            $this->sampah = Sampah::find($sampah_id);
-            $this->sampahItems = [
-                [
-                    'jenis_sampah' => $this->sampah->jenis_sampah,
-                    'nama_sampah' => $this->sampah->nama_sampah,
-                    'harga_sampah' => $this->sampah->harga_sampah,
-                    'jumlah_sampah' => $this->sampah->jumlah_sampah,
-
-                ]
-            ];
-            $this->transaksi_id = $this->sampah->transaksi_id;
-        } else {
-            // Adding a new Sampah
-            $this->sampah = new Sampah;
-            $this->sampahItems = [];
-        }
+        return view('livewire.sampah-form');
     }
 }

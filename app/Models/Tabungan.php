@@ -73,23 +73,34 @@ class Tabungan extends Model
                     $historyTabungan->decrement('debit', $jumlah);
                 }
             } else {
-                if ($operation === 'increment') {
+                if (
+                    $operation === 'increment'
+                ) {
                     $historyTabungan->increment('kredit', $jumlah);
                 } else {
                     $historyTabungan->decrement('kredit', $jumlah);
                 }
             }
+
+            if ($historyTabungan->debit == 0 && $historyTabungan->kredit == 0) {
+                $historyTabungan->delete();
+            }
         }
     }
 
-    public function createSaldo($jumlah, $jenis = 'debit', $keterangan = '')
-    {
-        // Membuat record baru di tabel history_tabungan
-        $historyTabungan = new HistoryTabungan();
-        $historyTabungan->tabungan_id = $this->id;
-        $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
-        $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
-        $historyTabungan->keterangan = $keterangan;
-        $historyTabungan->save();
+    public function createSaldo(
+        $jumlah,
+        $jenis = 'debit',
+        $keterangan = ''
+    ) {
+        if ($jumlah != 0) {
+            // Membuat record baru di tabel history_tabungan jika jumlah tidak 0
+            $historyTabungan = new HistoryTabungan();
+            $historyTabungan->tabungan_id = $this->id;
+            $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
+            $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
+            $historyTabungan->keterangan = $keterangan;
+            $historyTabungan->save();
+        }
     }
 }
