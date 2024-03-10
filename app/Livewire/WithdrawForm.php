@@ -12,53 +12,54 @@ class WithdrawForm extends ModalComponent
 {
     use Toastable;
 
-    public Tabungan $tabungan;
+    public $tabungan_id;
     public $withdraw;
 
-    public function render()
+    public function mount($rowId = null)
     {
-        return view('livewire.withdraw-form');
+        $this->tabungan_id = $rowId;
     }
 
-    public function resetCreateForm()
+    public function rules()
+    {
+        return [
+            'withdraw' => 'required|numeric|min:0'
+        ];
+    }
+
+    public function resetForm()
     {
         $this->reset(['withdraw']);
     }
 
     public function store()
     {
-        if ($this->tabungan->saldo === null || !is_numeric($this->tabungan->saldo)) {
-            $this->tabungan->saldo = 0;
+        $this->validate();
+
+        $tabungan = Tabungan::find($this->tabungan_id);
+
+        if ($tabungan) {
+            if ($this->withdraw > $tabungan->saldo) {
+                $this->error('Saldo tidak mencukupi untuk melakukan penarikan.');
+                return;
+            }
+
+            $keteranganWithdraw = 'Penarikan Tabungan - ' . now()->format('d/m/Y');
+            $tabungan->updateSaldo($this->withdraw, 'kredit', 'increment', $keteranganWithdraw);
+            $this->success('Penarikan berhasil dilakukan');
+        } else {
+            $this->error('Tabungan tidak ditemukan');
         }
 
-        $validatedData = $this->validate([
-            'withdraw' => 'required|numeric|min:1|max:' . $this->tabungan->saldo,
-        ]);
-
-        // Perform the withdrawal
-        $this->tabungan->saldo -= $validatedData['withdraw'];
-        $this->tabungan->save();
-
-        // Create a new HistoryTabungan instance
-        $history = new HistoryTabungan;
-        $history->tabungan_id = $this->tabungan->id;
-        $history->debit = 0;
-        $history->kredit = $validatedData['withdraw'];
-        $history->keterangan = 'Tarik tunai tabungan';
-        $history->save();
-
-        $this->success('Tarik tunai tabungan berhasil dilakukan');
-
         $this->closeModalWithEvents([
-            TabunganTable::class => 'withDrawUpdated'
+            TabunganTable::class => 'tabunganUpdated'
         ]);
 
-        $this->resetCreateForm();
+        $this->resetForm();
     }
 
-    public function mount($rowId = null)
+    public function render()
     {
-        $this->tabungan = $rowId ? Tabungan::find($rowId) : new Tabungan;
-        $this->withdraw = 0;
+        return view('livewire.withdraw-form');
     }
 }

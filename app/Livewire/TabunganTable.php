@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Models\HistoryTabungan;
 use App\Models\Tabungan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Masmerise\Toaster\Toastable;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Detail;
@@ -21,6 +23,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 final class TabunganTable extends PowerGridComponent
 {
     use WithExport;
+    use Toastable;
 
     public function setUp(): array
     {
@@ -114,7 +117,7 @@ final class TabunganTable extends PowerGridComponent
                 ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
                 ->openModal('tabungan-form', ['rowId' => $row->id]);
         }
-        if (auth()->user()->can('withdraw-tabungan')) {
+        if (auth()->user()->can('withdraw-tabungan') && $row->status === 'Aktif') {
             $actions[] = Button::add('withdraw')
                 ->slot('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" class="w-5 h-5">
                 <path d="M12 7.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
@@ -198,5 +201,24 @@ final class TabunganTable extends PowerGridComponent
         $pdf->save($path . '/tabungan.pdf');
         // Menampilkan file pdf
         return response()->download($path . '/tabungan.pdf');
+    }
+
+    public function deleteWithdraw($historyTabunganId)
+    {
+        $historyTabungan = HistoryTabungan::find($historyTabunganId);
+
+        if ($historyTabungan) {
+            $tabungan = $historyTabungan->tabungan;
+            $jumlahPenarikan = $historyTabungan->kredit;
+            $keteranganPenarikan = $historyTabungan->keterangan;
+
+            $historyTabungan->delete();
+
+            $tabungan->updateSaldo($jumlahPenarikan, 'kredit', 'decrement', $keteranganPenarikan);
+
+            $this->success('Data penarikan tabungan berhasil dihapus.');
+        } else {
+            $this->error('Data penarikan tabungan tidak ditemukan.');
+        }
     }
 }

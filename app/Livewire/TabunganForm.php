@@ -14,39 +14,43 @@ class TabunganForm extends ModalComponent
     public Tabungan $tabungan;
     public $status;
 
-    public function render()
+    public function mount($rowId = null)
     {
-        return view('livewire.tabungan-form');
+        $this->tabungan = Tabungan::findOrNew($rowId);
+        if ($this->tabungan->exists) {
+            $this->status = $this->tabungan->status;
+        }
     }
 
-    public function resetCreateForm()
+    public function rules()
+    {
+        return [
+            'status' => 'required'
+        ];
+    }
+
+    public function resetForm()
     {
         $this->reset(['status']);
     }
 
     public function store()
     {
-        $validatedData = $this->validate([
-            'status' => 'required',
-        ]);
-
-        $this->tabungan->fill($validatedData);
+        $this->validate();
+        $this->tabungan->status = $this->status;
         $this->tabungan->save();
 
-        $this->success('Status tabungan berhasil diubah');
+        $this->success('Data tabungan berhasil diupdate');
 
         $this->closeModalWithEvents([
             TabunganTable::class => 'tabunganUpdated'
         ]);
 
-        $this->resetCreateForm();
+        $this->resetForm();
     }
 
-    public function mount($rowId = null)
+    public function render()
     {
-        $this->tabungan = $rowId ? Tabungan::find($rowId) : new Tabungan;
-        if ($this->tabungan->exists) {
-            $this->status = $this->tabungan->status;
-        }
+        return view('livewire.tabungan-form');
     }
 }
