@@ -20,11 +20,11 @@ class TransaksiForm extends ModalComponent
 
     public function mount($rowId = null)
     {
-        $this->id = $rowId;
-        $this->transaksi = $rowId ? Transaksi::find($rowId) : new Transaksi();
+        $this->transaksi = Transaksi::findOrNew($rowId);
+        $this->nasabah = Nasabah::where('status', 'Aktif')->get();
+        $this->id = $this->transaksi->id;
         $this->user_id = auth()->user()->id;
         $this->user_name = auth()->user()->name;
-        $this->nasabah = Nasabah::where('status', 'Aktif')->get();
         $this->nasabah_id = $this->transaksi->nasabah_id;
         $this->total_sampah = $this->total_sampah;
         $this->total_harga = $this->total_harga;

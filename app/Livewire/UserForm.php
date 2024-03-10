@@ -24,8 +24,6 @@ class UserForm extends ModalComponent
         $this->email = $this->user->email;
         $this->role_id = $this->user->role_id;
         $this->status = $rowId ? $this->user->status : 'Aktif';
-
-        dump($this->roles);
     }
 
     public function rules()
