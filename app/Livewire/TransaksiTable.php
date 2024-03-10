@@ -54,6 +54,7 @@ final class TransaksiTable extends PowerGridComponent
             ->join('users as nasabah_user', 'nasabah.user_id', '=', 'nasabah_user.id')
             ->select([
                 'transaksi.id',
+                'transaksi.kode_transaksi',
                 'transaksi.user_id',
                 'transaksi.nasabah_id',
                 'transaksi.total_sampah',
@@ -82,6 +83,7 @@ final class TransaksiTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('kode_transaksi')
             ->add('nasabah_user_id')
             ->add('name')
             ->add('total_harga_formatted', fn (Transaksi $model) => 'Rp ' . number_format($model->total_harga_sampah, 0, ',', '.'))
@@ -92,7 +94,6 @@ final class TransaksiTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')->sortable(),
             Column::make('Nama Nasabah', 'name'),
 
             Column::make('Total harga', 'total_harga_formatted', 'total_harga')
@@ -261,19 +262,22 @@ final class TransaksiTable extends PowerGridComponent
     public function deleteSampah($sampah_id)
     {
         $sampah = Sampah::find($sampah_id);
-        $sampah->created_at;
+
         if ($sampah) {
             // Hitung total harga sampah
             $totalHargaSampah = $sampah->jumlah_sampah * $sampah->harga_sampah;
+
             // Dapatkan tabungan nasabah
             $tabungan = Tabungan::where('nasabah_id', $sampah->transaksi->nasabah_id)->first();
 
             if ($tabungan) {
                 // Kurangi total harga sampah dari saldo tabungan
-                $tabungan->updateSaldo($totalHargaSampah, 'debit', 'decrement', 'Penjualan Sampah', $sampah->created_at);
+                $keterangan = 'Penjualan Sampah - Transaksi #' . $sampah->transaksi->kode_transaksi;
+                $tabungan->updateSaldo($totalHargaSampah, 'debit', 'decrement', $keterangan, $sampah->created_at);
             }
 
             $sampah->delete();
+
             $this->success('Sampah berhasil dihapus');
             $this->success('Tabungan berhasil diupdate');
         }

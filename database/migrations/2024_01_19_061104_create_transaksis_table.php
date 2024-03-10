@@ -16,6 +16,9 @@ return new class extends Migration
             // Kolom id akan digunakan sebagai primary key
             $table->id();
 
+            // Kolom kode_transaksi akan digunakan untuk menyimpan kode transaksi
+            $table->string('kode_transaksi', 20)->unique();
+
             // Kolom user_id adalah foreign key yang terhubung ke tabel 'users' dengan opsi onDelete cascade
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 

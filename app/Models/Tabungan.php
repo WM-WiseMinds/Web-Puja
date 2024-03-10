@@ -62,7 +62,6 @@ class Tabungan extends Model
         // Try to find an existing history record
         $historyTabungan = HistoryTabungan::where('tabungan_id', $this->id)
             ->where('keterangan', $keterangan)
-            ->where('created_at', $created_at)
             ->first();
 
         if ($historyTabungan) {
@@ -73,9 +72,7 @@ class Tabungan extends Model
                     $historyTabungan->decrement('debit', $jumlah);
                 }
             } else {
-                if (
-                    $operation === 'increment'
-                ) {
+                if ($operation === 'increment') {
                     $historyTabungan->increment('kredit', $jumlah);
                 } else {
                     $historyTabungan->decrement('kredit', $jumlah);
@@ -85,7 +82,20 @@ class Tabungan extends Model
             if ($historyTabungan->debit == 0 && $historyTabungan->kredit == 0) {
                 $historyTabungan->delete();
             }
+        } else {
+            // Create a new history record if it doesn't exist
+            if ($operation === 'increment') {
+                $historyTabungan = new HistoryTabungan();
+                $historyTabungan->tabungan_id = $this->id;
+                $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
+                $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
+                $historyTabungan->keterangan = $keterangan;
+                $historyTabungan->created_at = $created_at;
+                $historyTabungan->save();
+            }
         }
+
+        $this->updateSaldoTable();
     }
 
     public function createSaldo(

@@ -15,6 +15,7 @@ class Transaksi extends Model
 
     //protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel transaksi
     protected $fillable = [
+        'kode_transaksi',
         'user_id',
         'nasabah_id',
         'total_sampah',

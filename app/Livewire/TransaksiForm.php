@@ -16,7 +16,7 @@ class TransaksiForm extends ModalComponent
     use Toastable;
 
     public Transaksi $transaksi;
-    public $id, $user_name, $user_id, $nasabah, $nasabah_id, $tgl_transaksi, $total_sampah, $total_harga, $status;
+    public $id, $user_name, $user_id, $nasabah, $nasabah_id, $tgl_transaksi, $total_sampah, $total_harga, $status, $kode_transaksi;
 
     public function mount($rowId = null)
     {
@@ -36,8 +36,6 @@ class TransaksiForm extends ModalComponent
         return [
             'user_id' => 'required|exists:users,id',
             'nasabah_id' => 'required|exists:nasabah,id',
-            // 'total_sampah' => 'required',
-            // 'total_harga' => 'required',
             'status' => 'required',
         ];
     }
@@ -52,6 +50,10 @@ class TransaksiForm extends ModalComponent
         $validatedData = $this->validate();
 
         $nasabahId = $this->transaksi->nasabah_id;
+
+        if (!$this->transaksi->exists) {
+            $validatedData['kode_transaksi'] = $this->generateKodeTransaksi();
+        }
 
         $this->transaksi = Transaksi::updateOrCreate(['id' => $this->id], $validatedData);
 
@@ -71,6 +73,22 @@ class TransaksiForm extends ModalComponent
         ]);
 
         $this->resetForm();
+    }
+
+    public function generateKodeTransaksi()
+    {
+        $prefix = 'TRX';
+        $length = 8;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        do {
+            $kodeTransaksi = $prefix;
+            for ($i = 0; $i < $length; $i++) {
+                $kodeTransaksi .= $characters[rand(0, strlen($characters) - 1)];
+            }
+        } while (Transaksi::where('kode_transaksi', $kodeTransaksi)->exists());
+
+        return $kodeTransaksi;
     }
 
     public function render()

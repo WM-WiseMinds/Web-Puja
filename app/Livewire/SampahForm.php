@@ -23,6 +23,7 @@ class SampahForm extends ModalComponent
     {
         $this->sampah = Sampah::findOrNew($sampah_id);
         $this->transaksi_id = $transaksi_id ? $transaksi_id : $this->sampah->transaksi_id;
+        $this->transaksi = Transaksi::find($this->transaksi_id);
         if ($this->sampah->exists) {
             $this->sampahItems = [
                 [
@@ -101,19 +102,9 @@ class SampahForm extends ModalComponent
             ]);
 
             if ($perubahanSaldo != 0) {
-                $tabungan = Tabungan::firstOrCreate([
-                    'nasabah_id' => Transaksi::find($this->transaksi_id)->nasabah_id,
-                ], [
-                    'saldo' => 0,
-                ]);
-
-                $keterangan = 'Penjualan Sampah';
+                $keterangan = 'Penjualan Sampah - Transaksi #' . $this->transaksi->kode_transaksi;
                 $operation = $perubahanSaldo > 0 ? 'increment' : 'decrement';
-                if ($this->sampah->exists) {
-                    $tabungan->updateSaldo(abs($perubahanSaldo), 'debit', $operation, $keterangan, $this->sampah->created_at);
-                } else {
-                    $tabungan->createSaldo(abs($perubahanSaldo), 'debit', $keterangan);
-                }
+                $tabungan->updateSaldo(abs($perubahanSaldo), 'debit', $operation, $keterangan, now());
                 $this->success('Tabungan berhasil diperbarui');
             }
 
