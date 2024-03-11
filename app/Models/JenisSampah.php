@@ -16,7 +16,8 @@ class JenisSampah extends Model
     //  protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel jenis_sampah
     protected $fillable = [
         'jenis_sampah',
-        'harga'
+        'harga',
+        'status',
     ];
 
     // Relasi antara model JenisSampah dengan model Sampah (Satu jenis sampah memiliki banyak sampah)

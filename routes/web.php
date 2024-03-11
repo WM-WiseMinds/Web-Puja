@@ -69,4 +69,8 @@ Route::middleware([
     Route::get('/penukaran', function () {
         return view('penukaran');
     })->name('penukaran');
+
+    Route::get('/jenis-sampah', function () {
+        return view('jenis-sampah');
+    })->name('jenis-sampah');
 });
