@@ -18,7 +18,7 @@ class JenisSampahForm extends ModalComponent
     {
         $this->jenisSampah = JenisSampah::findOrNew($rowId);
         $this->id = $this->jenisSampah->id;
-        $this->nama_jenis = $this->jenisSampah->nama_jenis_sampah;
+        $this->nama_jenis = $this->jenisSampah->nama_jenis;
         $this->harga = $this->jenisSampah->harga;
         $this->status = $rowId ? $this->jenisSampah->status : 'Aktif';
     }
