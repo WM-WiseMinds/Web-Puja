@@ -1,10 +1,6 @@
 <div class="p-2 bg-white border border-slate-200">
     <table class="table-auto w-full">
         <tbody>
-            <tr>
-                <td class="border px-4 py-2 text-sm font-semibold">Id</td>
-                <td class="border px-4 py-2">{{ $id }}</td>
-            </tr>
             @if ($row->gambar_barang)
                 <tr>
                     <td class="border px-4 py-2 text-sm font-semibold">Gambar Barang</td>

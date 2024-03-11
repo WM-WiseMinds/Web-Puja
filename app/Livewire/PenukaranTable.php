@@ -45,12 +45,15 @@ final class PenukaranTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Penukaran::query()
-            ->join('tabungan', 'penukaran.tabungan_id', '=', 'tabungan.id')
-            ->join('barang', 'penukaran.barang_id', '=', 'barang.id')
-            ->join('nasabah', 'tabungan.nasabah_id', '=', 'nasabah.id')
-            ->join('users', 'nasabah.user_id', '=', 'users.id')
-            ->select('penukaran.*', 'users.name as nama_nasabah', 'barang.nama_barang as nama_barang', 'tabungan.id as tabungan_id', 'barang.id as barang_id');
+        $query = Penukaran::query()->with(['tabungan', 'barang']);
+
+        if (auth()->user()->role->name == 'Nasabah') {
+            $query->whereHas('tabungan', function ($query) {
+                $query->where('nasabah_id', auth()->user()->nasabah->id);
+            });
+        }
+
+        return $query;
     }
 
     public function relationSearch(): array
@@ -62,19 +65,20 @@ final class PenukaranTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('nama_nasabah')
-            ->add('nama_barang')
-            ->add('harga_barang_saat_tukar', fn (Penukaran $model) => 'Rp ' . number_format($model->harga_barang_saat_tukar, 0, ',', '.'))
-            ->add('created_at_formatted', fn (Penukaran $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
+            ->add('kode_penukaran')
+            ->add('nama_nasabah', fn ($row) => $row->tabungan->nasabah->user->name)
+            ->add('nama_barang', fn ($row) => $row->barang->nama_barang)
+            ->add('harga_barang', fn ($row) => 'Rp ' . number_format($row->harga_barang, 0, ',', '.'))
+            ->add('created_at_formatted', fn ($row) => Carbon::parse($row->created_at)->format('d-m-Y'));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
+            Column::make('Kode Penukaran', 'kode_penukaran')->sortable(),
             Column::make('Nama Nasabah', 'nama_nasabah')->sortable()->searchable(),
             Column::make('Nama Barang', 'nama_barang')->sortable()->searchable(),
-            Column::make('Harga Barang', 'harga_barang_saat_tukar')->sortable()->searchable(),
+            Column::make('Harga Barang', 'harga_barang')->sortable()->searchable(),
 
             Column::make('Tanggal Penukaran', 'created_at_formatted')
                 ->sortable()
@@ -207,20 +211,15 @@ final class PenukaranTable extends PowerGridComponent
     {
         $penukaran = Penukaran::findOrFail($rowId);
         $tabungan = $penukaran->tabungan;
+        $keteranganPenukaran = 'Penukaran Barang - Penukaran #' . $penukaran->kode_penukaran;
 
-        $historyTabungan = HistoryTabungan::where('tabungan_id', $tabungan->id)
-            ->where('keterangan', 'Penukaran barang')
-            ->where('created_at', $penukaran->created_at)
-            ->first();
+        $tabungan->updateSaldo($penukaran->harga_barang, 'kredit', 'decrement', $keteranganPenukaran, true);
 
-        if ($historyTabungan) {
-            $tabungan->saldo += $historyTabungan->kredit;
-            $tabungan->save();
-
-            $historyTabungan->delete();
-        }
+        // Mengembalikan stok barang
+        $penukaran->barang->increment('stok_barang');
 
         $penukaran->delete();
-        $this->success('Penukaran berhasil dihapus dan saldo telah dikembalikan');
+        $this->success('Penukaran berhasil dihapus');
+        $this->success('Saldo berhasil dikembalikan');
     }
 }

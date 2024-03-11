@@ -49,7 +49,7 @@
 </style>
 
 <div class="text-center">
-    <h2>Daftar Tabungan</h2>
+    <h2>Daftar Jenis Sampah</h2>
 </div>
 <div class="divider"></div>
 <div class="text-right">
@@ -59,19 +59,17 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Nama Nasabah</th>
-            <th>Saldo</th>
+            <th>Nama Jenis Sampah</th>
+            <th>Harga</th>
             <th>Status</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($datasource as $tabungan)
+        @foreach ($datasource as $jenis_sampah)
             <tr>
-                <td>{{ $tabungan->id }}</td>
-                <td>{{ $tabungan->nasabah->user->name }}</td>
-                <td>Rp {{ number_format($tabungan->saldo, 0, ',', '.') }}</td>
-                <td>{{ $tabungan->status }}</td>
+                <td>{{ $jenis_sampah->nama_jenis }}</td>
+                <td>Rp {{ number_format($jenis_sampah->harga, 0, ',', '.') }}</td>
+                <td>{{ $jenis_sampah->status }}</td>
             </tr>
         @endforeach
     </tbody>

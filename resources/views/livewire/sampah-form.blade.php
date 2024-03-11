@@ -2,12 +2,20 @@
     <form>
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="">
+                <div class="mb-4 text-center">
+                    @if ($id)
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Update Sampah</h3>
+                    @else
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Create Sampah</h3>
+                    @endif
+                </div>
                 <div class="mb-4">
                     <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Transaksi
                         ID</label>
                     <input type="text"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        readonly id="exampleFormControlInput1" placeholder="Enter Transaksi ID" wire:model="transaksi_id">
+                        readonly id="exampleFormControlInput1" placeholder="Enter Transaksi ID"
+                        wire:model="transaksi_id">
                     @error('transaksi_id')
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
@@ -15,13 +23,18 @@
                 @foreach ($sampahItems as $index => $item)
                     <div wire:key='sampah-item-{{ $index }}'></div>
                     <div class="mb-4">
-                        <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Jenis
+                        <label for="jenis_sampah" class="block text-gray-700 text-sm font-bold mb-2">Jenis
                             Sampah</label>
-                        <input type="text"
+                        <select wire:model="sampahItems.{{ $index }}.jenis_sampah_id"
+                            wire:change="updateHargaSampah({{ $index }})"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="exampleFormControlInput1" placeholder="Enter Jenis Sampah"
-                            wire:model="sampahItems.{{ $index }}.jenis_sampah">
-                        @error('jenis_sampah')
+                            id="jenis_sampah">
+                            <option value="" readonly selected>Pilih Jenis Sampah</option>
+                            @foreach ($jenis_sampah as $jenis)
+                                <option value="{{ $jenis->id }}">{{ $jenis->nama_jenis }}</option>
+                            @endforeach
+                        </select>
+                        @error('jenis_kelamin')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -42,14 +55,14 @@
                         <input type="text"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="exampleFormControlInput1" placeholder="Enter Harga Sampah"
-                            wire:model="sampahItems.{{ $index }}.harga_sampah">
+                            wire:model="sampahItems.{{ $index }}.harga_sampah" readonly>
                         @error('harga_sampah')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Jumlah
-                            Sampah</label>
+                            Sampah (Kg)</label>
                         <input type="text"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="exampleFormControlInput1" placeholder="Enter Jumlah Sampah"
@@ -58,16 +71,18 @@
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="mb-4">
+                        <button type="button" wire:click.prevent="removeSampahItem({{ $index }})"
+                            class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-red-600 text-base font-bold text-white hover:bg-red-700 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150">
+                            Remove Sampah
+                        </button>
+                    </div>
                 @endforeach
                 <div class="mb-4">
                     <button type="button" wire:click.prevent="addSampahItem"
                         class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150">
                         Add Sampah Item
                     </button>
-                    {{-- <button type="button" wire:click.prevent="removeSampahItem({{ $index }})"
-                        class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150">
-                        Remove Sampah Item
-                    </button> --}}
                 </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

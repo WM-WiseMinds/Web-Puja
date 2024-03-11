@@ -62,7 +62,6 @@ class Tabungan extends Model
         // Try to find an existing history record
         $historyTabungan = HistoryTabungan::where('tabungan_id', $this->id)
             ->where('keterangan', $keterangan)
-            ->where('created_at', $created_at)
             ->first();
 
         if ($historyTabungan) {
@@ -79,17 +78,37 @@ class Tabungan extends Model
                     $historyTabungan->decrement('kredit', $jumlah);
                 }
             }
+
+            if ($historyTabungan->debit == 0 && $historyTabungan->kredit == 0) {
+                $historyTabungan->delete();
+            }
+        } else {
+            // Create a new history record if it doesn't exist
+            if ($operation === 'increment') {
+                $historyTabungan = new HistoryTabungan();
+                $historyTabungan->tabungan_id = $this->id;
+                $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
+                $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
+                $historyTabungan->keterangan = $keterangan;
+                $historyTabungan->created_at = $created_at;
+                $historyTabungan->save();
+            }
         }
+
+        $this->updateSaldoTable();
     }
 
-    public function createSaldo($jumlah, $jenis = 'debit', $keterangan = '')
+    public function updateHargaBarangPenukaran($keteranganPenukaran, $hargaBarangBaru)
     {
-        // Membuat record baru di tabel history_tabungan
-        $historyTabungan = new HistoryTabungan();
-        $historyTabungan->tabungan_id = $this->id;
-        $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
-        $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
-        $historyTabungan->keterangan = $keterangan;
-        $historyTabungan->save();
+        $historyTabungan = HistoryTabungan::where('tabungan_id', $this->id)
+            ->where('keterangan', $keteranganPenukaran)
+            ->first();
+
+        if ($historyTabungan) {
+            $historyTabungan->kredit = $hargaBarangBaru;
+            $historyTabungan->save();
+        } else {
+            $this->updateSaldo($hargaBarangBaru, 'kredit', 'increment', $keteranganPenukaran);
+        }
     }
 }

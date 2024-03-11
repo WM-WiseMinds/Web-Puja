@@ -38,9 +38,9 @@ Route::middleware([
         return view('dashboard', compact('userCount', 'sampahCount', 'barangCount', 'penukaranCount', 'nasabahCount', 'tabunganCount'));
     })->name('dashboard');
 
-    Route::get('/permissions', function () {
-        return view('permissions');
-    })->name('permissions');
+    // Route::get('/permissions', function () {
+    //     return view('permissions');
+    // })->name('permissions');
 
     Route::get('/roles', function () {
         return view('roles');
@@ -69,4 +69,8 @@ Route::middleware([
     Route::get('/penukaran', function () {
         return view('penukaran');
     })->name('penukaran');
+
+    Route::get('/jenis-sampah', function () {
+        return view('jenis-sampah');
+    })->name('jenis-sampah');
 });

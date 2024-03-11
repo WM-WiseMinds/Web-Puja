@@ -12,20 +12,22 @@ class RolesForm extends ModalComponent
 {
     use Toastable;
 
-    public $roles, $id, $name, $permissions;
+    public Roles $roles;
+    public $id, $name, $permissions;
     public $permissions_id = [];
 
-    public function render()
+    public function mount($rowId = null)
     {
-        $permissions = Permissions::all(); // This ensures $permissions is always set
-        $roles = Roles::all();
-        return view('livewire.roles-form', compact('permissions', 'roles'));
+        $this->roles = Roles::findOrNew($rowId);
+        $this->permissions = Permissions::all();
+        $this->id = $this->roles->id;
+        $this->name = $this->roles->name;
+        $this->permissions_id = $this->roles->permissions->pluck('id')->toArray();
     }
 
     public function resetCreateForm()
     {
-        $this->name = '';
-        $this->permissions_id = [];
+        $this->reset(['id', 'name', 'permissions_id']);
     }
 
     public function store()
@@ -56,20 +58,13 @@ class RolesForm extends ModalComponent
             RolesTable::class => 'rolesUpdated',
         ]);
 
-        $this->dispatch('sidebarUpdated');
-
         $this->resetCreateForm();
+
+        $this->dispatch('sidebar-updated');
     }
 
-    public function mount($rowId = null)
+    public function render()
     {
-        $this->permissions = Permissions::all();
-        if (!is_null($rowId)) {
-            $this->permissions = Permissions::all();
-            $roles = Roles::findOrFail($rowId);
-            $this->id = $rowId;
-            $this->name = $roles->name;
-            $this->permissions_id = $roles->permissions->pluck('id')->toArray();
-        }
+        return view('livewire.roles-form');
     }
 }

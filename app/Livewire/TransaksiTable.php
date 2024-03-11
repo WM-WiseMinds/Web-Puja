@@ -47,26 +47,15 @@ final class TransaksiTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Transaksi::query()
-            ->with('sampah')
-            ->join('users', 'transaksi.user_id', '=', 'users.id')
-            ->join('nasabah', 'transaksi.nasabah_id', '=', 'nasabah.id')
-            ->join('users as nasabah_user', 'nasabah.user_id', '=', 'nasabah_user.id')
-            ->select([
-                'transaksi.id',
-                'transaksi.user_id',
-                'transaksi.nasabah_id',
-                'transaksi.total_sampah',
-                'transaksi.total_berat',
-                'transaksi.total_harga',
-                'transaksi.status',
-                'transaksi.created_at',
-                'users.name as user_name',
-                'nasabah.user_id as nasabah_user_id',
-                'nasabah_user.name as name',
-                'nasabah.alamat as alamat',
-                'nasabah.no_hp as no_hp',
-            ]);
+        $query = Transaksi::query()->with(['nasabah', 'user']);
+
+        // Check if the currently logged in user is a Nasabah
+        if (auth()->user()->role->name == 'Nasabah') {
+            // Filter the Transaksi to only include those related to the currently logged in user
+            $query->where('nasabah_id', auth()->user()->nasabah->id);
+        }
+
+        return $query;
     }
 
     public function relationSearch(): array
@@ -83,8 +72,13 @@ final class TransaksiTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('nasabah_user_id')
-            ->add('name')
+            ->add('kode_transaksi')
+            ->add('user_id')
+            ->add('nasabah.user_id')
+            ->add('nasabah_id')
+            ->add('total_sampah')
+            ->add('total_harga')
+            ->add('nama_nasabah', fn ($row) => $row->nasabah->user->name)
             ->add('total_harga_formatted', fn (Transaksi $model) => 'Rp ' . number_format($model->total_harga_sampah, 0, ',', '.'))
             ->add('status')
             ->add('created_at_formatted', fn (Transaksi $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
@@ -93,8 +87,7 @@ final class TransaksiTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')->sortable(),
-            Column::make('Nama Nasabah', 'name'),
+            Column::make('Nama Nasabah', 'nama_nasabah'),
 
             Column::make('Total harga', 'total_harga_formatted', 'total_harga')
                 ->sortable()
@@ -114,9 +107,9 @@ final class TransaksiTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::select('name', 'nasabah.user_id')
-                ->dataSource(Transaksi::with('nasabah.user')->get()->map(function ($transaksi) {
-                    return ['id' => $transaksi->nasabah->user_id, 'name' => $transaksi->nasabah->user->name];
+            Filter::select('nama_nasabah', 'nasabah_id')
+                ->dataSource(Transaksi::with('nasabah')->get()->map(function ($transaksi) {
+                    return ['id' => $transaksi->nasabah_id, 'name' => $transaksi->nasabah->user->name];
                 })->unique('id'))
                 ->optionValue('id')
                 ->optionLabel('name'),
@@ -130,7 +123,7 @@ final class TransaksiTable extends PowerGridComponent
     public function actions(\App\Models\Transaksi $row): array
     {
         $actions = [];
-        if (auth()->user()->can('create-sampah')) {
+        if (auth()->user()->can('create-sampah') && $row->status == 'Aktif') {
             $actions[] = Button::add('add-sampah')
                 ->slot('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" class="w-5 h-5">
                 <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
@@ -152,17 +145,17 @@ final class TransaksiTable extends PowerGridComponent
                 ->openModal('transaksi-form', ['rowId' => $row->id]);
         }
 
-        if (auth()->user()->can('delete-transaksi')) {
-            $actions[] = Button::add('delete')
-                ->slot('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" class="w-5 h-5">
-                <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
-                <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                </svg>
-                ')
-                ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('delete', ['rowId' => $row->id]);
-        }
+        // if (auth()->user()->can('delete-transaksi')) {
+        //     $actions[] = Button::add('delete')
+        //         ->slot('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" class="w-5 h-5">
+        //         <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+        //         <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        //         </svg>
+        //         ')
+        //         ->id()
+        //         ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+        //         ->dispatch('delete', ['rowId' => $row->id]);
+        // }
         return $actions;
     }
 
@@ -262,19 +255,22 @@ final class TransaksiTable extends PowerGridComponent
     public function deleteSampah($sampah_id)
     {
         $sampah = Sampah::find($sampah_id);
-        $sampah->created_at;
+
         if ($sampah) {
             // Hitung total harga sampah
             $totalHargaSampah = $sampah->jumlah_sampah * $sampah->harga_sampah;
+
             // Dapatkan tabungan nasabah
             $tabungan = Tabungan::where('nasabah_id', $sampah->transaksi->nasabah_id)->first();
 
             if ($tabungan) {
                 // Kurangi total harga sampah dari saldo tabungan
-                $tabungan->updateSaldo($totalHargaSampah, 'debit', 'decrement', 'Penjualan Sampah', $sampah->created_at);
+                $keterangan = 'Penjualan Sampah - Transaksi #' . $sampah->transaksi->kode_transaksi;
+                $tabungan->updateSaldo($totalHargaSampah, 'debit', 'decrement', $keterangan, $sampah->created_at);
             }
 
             $sampah->delete();
+
             $this->success('Sampah berhasil dihapus');
             $this->success('Tabungan berhasil diupdate');
         }

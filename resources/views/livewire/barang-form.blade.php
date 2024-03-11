@@ -2,6 +2,13 @@
     <form>
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="">
+                <div class="mb-4 text-center">
+                    @if ($id)
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Update Barang</h3>
+                    @else
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Create Barang</h3>
+                    @endif
+                </div>
                 <div class="mb-4">
                     <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Nama
                         Barang</label>
@@ -43,8 +50,8 @@
                     @enderror
                 </div>
                 <div class="mb-4">
-                    <label for="exampleFormControlInput3"
-                        class="block text-gray-700 text-sm font-bold mb-2">Gambar_barang</label>
+                    <label for="exampleFormControlInput3" class="block text-gray-700 text-sm font-bold mb-2">Gambar
+                        Barang</label>
 
                     <input type="file" id="gambar_barang" wire:model.live="gambar_barang" x-ref="gambar_barang"
                         class="w-full"
@@ -65,19 +72,21 @@
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="mb-4">
-                    <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
-                    <select wire:model="status"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="status">
-                        <option value="">Pilih Status</option>
-                        <option value="Aktif">Aktif</option>
-                        <option value="Nonaktif">Nonaktif</option>
-                    </select>
-                    @error('status')
-                        <span class="text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
+                @if ($this->id)
+                    <div class="mb-4">
+                        <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
+                        <select wire:model="status"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="status">
+                            <option value="">Pilih Status</option>
+                            <option value="Aktif">Aktif</option>
+                            <option value="Nonaktif">Nonaktif</option>
+                        </select>
+                        @error('status')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                @endif
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">

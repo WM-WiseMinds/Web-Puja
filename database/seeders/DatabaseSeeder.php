@@ -29,5 +29,6 @@ class DatabaseSeeder extends Seeder
         // $this->call([TabunganSeeder::class,]);
         // $this->call([HistoryTabunganSeeder::class,]);
         $this->call([BarangSeeder::class,]);
+        $this->call([JenisSampahSeeder::class,]);
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Barang;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Component;
 use Livewire\WithFileUploads;
 use LivewireUI\Modal\ModalComponent;
 use Masmerise\Toaster\Toastable;
@@ -15,65 +15,73 @@ class BarangForm extends ModalComponent
     use WithFileUploads;
 
     public Barang $barang;
-    public $nama_barang, $harga_barang, $stok_barang, $gambar_barang, $keterangan, $status, $gambar_url;
+    public $id, $nama_barang, $harga_barang, $stok_barang, $gambar_barang, $keterangan, $status, $gambar_url;
 
-    protected $rules = [
-        'nama_barang' => 'required',
-        'harga_barang' => 'required|numeric|min:0',
-        'stok_barang' => 'required|numeric|min:0',
-        'gambar_barang' => 'nullable|image|max:2048|mimes:jpg,jpeg,png,gif',
-        'keterangan' => 'required',
-        'status' => 'required',
-    ];
-
-    public function render()
+    public function mount($rowId = null)
     {
-        return view('livewire.barang-form');
+        $this->barang = Barang::findOrNew($rowId);
+        $this->id = $this->barang->id;
+        $this->nama_barang = $this->barang->nama_barang;
+        $this->harga_barang = $this->barang->harga_barang;
+        $this->stok_barang = $this->barang->stok_barang;
+        $this->keterangan = $this->barang->keterangan;
+        $this->status = $rowId ? $this->barang->status : 'Aktif';
+        $this->gambar_barang = $this->barang->gambar_barang;
+
+        if ($this->gambar_barang) {
+            $this->gambar_url = Storage::disk('public')->url('gambar-barang/' . $this->gambar_barang);
+        }
     }
 
-    public function resetCreateForm()
+    public function rules()
     {
-        $this->reset(['nama_barang', 'harga_barang', 'stok_barang', 'gambar_barang', 'keterangan', 'status']);
+        return [
+            'nama_barang' => 'required|string|max:255',
+            'harga_barang' => 'required|numeric|min:0',
+            'stok_barang' => 'required|numeric|min:0',
+            'keterangan' => 'required|string',
+            'status' => 'required',
+            'gambar_barang' => $this->gambar_barang instanceof UploadedFile ? ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'] : ['nullable'],
+        ];
+    }
+
+    public function resetForm()
+    {
+        $this->reset(['nama_barang', 'harga_barang', 'stok_barang', 'keterangan', 'status', 'gambar_barang']);
     }
 
     public function store()
     {
         $validatedData = $this->validate();
-        if ($this->gambar_barang) {
-            if ($this->barang->exists && $this->barang->gambar_barang) {
-                Storage::disk('public')->delete($this->barang->gambar_barang);
+
+        if ($this->gambar_barang instanceof UploadedFile) {
+            $originalName = pathinfo($this->gambar_barang->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $this->gambar_barang->extension();
+            $fileName = time() . '_' . $originalName . '.' . $extension;
+
+            if ($this->barang->gambar_barang) {
+                Storage::disk('public')->delete('gambar-barang/', $this->barang->gambar_barang);
             }
-            $validatedData['gambar_barang'] = $this->gambar_barang->store('gambar-barang', 'public');
+
+            $this->gambar_barang->storeAs('public/gambar-barang', $fileName);
+            $validatedData['gambar_barang'] = $fileName;
         } else {
-            // Jika tidak ada gambar baru, gunakan gambar lama
             $validatedData['gambar_barang'] = $this->barang->gambar_barang;
         }
 
-        $this->barang->fill($validatedData);
-        $this->barang->save();
+        $this->barang = Barang::updateOrCreate(['id' => $this->id], $validatedData);
 
-        $this->success($this->barang->wasRecentlyCreated ? 'Barang berhasil ditambahkan' : 'Barang berhasil diubah');
         $this->closeModalWithEvents([
-            BarangTable::class => 'barangUpdated',
+            BarangTable::class => 'barangUpdated'
         ]);
 
-        $this->resetCreateForm();
+        $this->success($this->barang->wasRecentlyCreated ? 'Data Barang Berhasil Dibuat' : 'Data Barang Berhasil Diubah');
+
+        $this->resetForm();
     }
 
-    public function mount($rowId = null)
+    public function render()
     {
-        $this->barang = $rowId ? Barang::find($rowId) : new Barang();
-        if ($this->barang->exists) {
-            $this->nama_barang = $this->barang->nama_barang;
-            $this->harga_barang = $this->barang->harga_barang;
-            $this->stok_barang = $this->barang->stok_barang;
-            $this->keterangan = $this->barang->keterangan;
-            $this->status = $this->barang->status;
-
-            // Menambahkan URL gambar
-            if ($this->barang->gambar_barang) {
-                $this->gambar_url = Storage::disk('public')->url($this->barang->gambar_barang);
-            }
-        }
+        return view('livewire.barang-form');
     }
 }

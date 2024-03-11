@@ -2,10 +2,6 @@
     <table class="table-auto w-full">
         <tbody>
             <tr>
-                <td class="border px-4 py-2 text-sm font-semibold">Id</td>
-                <td class="border px-4 py-2">{{ $id }}</td>
-            </tr>
-            <tr>
                 <td class="border px-4 py-2 text-sm font-semibold">Permissions</td>
                 <td class="border px-4 py-2">
                     <ul class="list-disc pl-8">

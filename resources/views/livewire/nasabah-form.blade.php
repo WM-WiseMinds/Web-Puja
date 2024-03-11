@@ -2,6 +2,13 @@
     <form>
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="">
+                <div class="mb-4 text-center">
+                    @if ($id)
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Update Nasabah</h3>
+                    @else
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Create Nasabah</h3>
+                    @endif
+                </div>
                 <div class="mb-4">
                     <label for="exampleFormControlInput4" class="block text-gray-700 text-sm font-bold mb-2">Nama</label>
                     <select wire:model="user_id"
@@ -49,19 +56,21 @@
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="mb-4">
-                    <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
-                    <select wire:model="status"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="status">
-                        <option value="">Pilih Status</option>
-                        <option value="Aktif">Aktif</option>
-                        <option value="Nonaktif">Nonaktif</option>
-                    </select>
-                    @error('status')
-                        <span class="text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
+                @if ($this->id)
+                    <div class="mb-4">
+                        <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
+                        <select wire:model="status"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="status">
+                            <option value="">Pilih Status</option>
+                            <option value="Aktif">Aktif</option>
+                            <option value="Nonaktif">Nonaktif</option>
+                        </select>
+                        @error('status')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                @endif
                 <div class="mb-4">
                     <label for="exampleFormControlInput3"
                         class="block text-gray-700 text-sm font-bold mb-2">Foto</label>

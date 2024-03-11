@@ -44,15 +44,7 @@ final class UserTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return User::query()
-            ->join('roles', 'users.role_id', '=', 'roles.id')
-            ->select([
-                'users.id',
-                'users.name',
-                'users.email',
-                'users.status',
-                'roles.name as role_name',
-            ]);
+        return User::query()->with('role');
     }
 
 
@@ -69,15 +61,15 @@ final class UserTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
-            ->add('role')
+            ->add('role', function ($row) {
+                return $row->role->name;
+            })
             ->add('status');
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')
-                ->sortable(),
             Column::make('Nama', 'name')
                 ->sortable()
                 ->searchable(),
@@ -86,7 +78,7 @@ final class UserTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Role', 'role_name')
+            Column::make('Role', 'role')
                 ->sortable(),
 
             Column::make('Status', 'status')
@@ -100,7 +92,7 @@ final class UserTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::select('role_name', 'role_id')
+            Filter::select('role', 'role_id')
                 ->dataSource(User::with('role')->get()->map(function ($user) {
                     return ['id' => $user->role_id, 'name' => $user->role->name];
                 })->unique('id'))
@@ -127,17 +119,17 @@ final class UserTable extends PowerGridComponent
                 ->openModal('user-form', ['rowId' => $row->id]);
         }
 
-        if (auth()->user()->can('delete-users')) {
-            $actions[] = Button::add('delete')
-                ->slot('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" class="w-5 h-5">
-                <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
-                <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                </svg>
-                ')
-                ->id()
-                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-                ->dispatch('delete', ['rowId' => $row->id]);
-        }
+        // if (auth()->user()->can('delete-users')) {
+        //     $actions[] = Button::add('delete')
+        //         ->slot('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" class="w-5 h-5">
+        //         <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+        //         <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        //         </svg>
+        //         ')
+        //         ->id()
+        //         ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+        //         ->dispatch('delete', ['rowId' => $row->id]);
+        // }
         return $actions;
     }
 

@@ -21,7 +21,7 @@ class NasabahFactory extends Factory
             'user_id' => $this->faker->unique()->randomElement(User::pluck('id')->toArray()),
             'alamat' => $this->faker->address,
             'no_hp' => $this->faker->phoneNumber,
-            'jenis_kelamin' => $this->faker->title,
+            'jenis_kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
             'foto' => $this->faker->imageUrl(),
             'status' => $this->faker->randomElement(['Aktif', 'Nonaktif']),
         ];
