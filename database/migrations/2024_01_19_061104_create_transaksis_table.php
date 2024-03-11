@@ -25,12 +25,6 @@ return new class extends Migration
             // Kolom nasabah_id adalah foreign key yang terhubung ke tabel 'nasabah' dengan opsi onDelete cascade
             $table->foreignId('nasabah_id')->constrained('nasabah')->onDelete('cascade');
 
-            // Kolom total_sampah akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
-            $table->integer('total_sampah')->nullable()->default(0);
-
-            // Kolom total_harga akan menyimpan total harga sampah dalam transaksi (maksimal 11 digit)
-            $table->integer('total_harga')->nullable()->default(0);
-
             // Kolom status akan digunakan untuk mengidentifikasi status transaksi
             $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
 

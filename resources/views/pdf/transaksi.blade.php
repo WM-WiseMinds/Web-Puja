@@ -1,32 +1,93 @@
-<div>
-    <h2>Tabel Transaksi</h2>
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
+<style>
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: auto;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .table th {
+        background-color: #f2f2f2;
+    }
+
+    .divider {
+        border-top: 1px solid #000;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .footer {
+        position: relative;
+    }
+
+    .signature-space {
+        height: 80px;
+    }
+
+    .footer-text {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .block {
+        display: block;
+    }
+</style>
+
+<div class="text-center">
+    <h2>Daftar Transaksi</h2>
+</div>
+<div class="divider"></div>
+<div class="text-right">
+    <p>Tanggal Dibuat: {{ now()->format('d F Y') }}</p>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Kode Transaksi</th>
+            <th>Nama Nasabah</th>
+            <th>Total Sampah (Kg)</th>
+            <th>Total Harga</th>
+            <th>Tanggal Transaksi</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($datasource as $transaksi)
             <tr>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Id</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Nama Nasabah</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Total Sampah</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Total Berat</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Total Harga</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Status</th>
+                <td>{{ $transaksi->kode_transaksi }}</td>
+                <td>{{ $transaksi->nasabah->user->name }}</td>
+                <td>{{ $transaksi->total_sampah }}</td>
+                <td>{{ $transaksi->total_harga }}</td>
+                <td>{{ $transaksi->created_at }}</td>
+                <td>{{ $transaksi->status }}</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($datasource as $transaksi)
-                <tr>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $transaksi->id }}</td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                        {{ $transaksi->nasabah->user->name }}</td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $transaksi->total_sampah }}
-                    </td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $transaksi->total_berat }}
-                    </td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                        Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}
-                    </td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $transaksi->status }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+        @endforeach
+    </tbody>
+</table>
+
+<div class="signature-space"></div>
+
+<div class="footer">
+    <div class="footer-text">
+        <div class="block">Cau Blayu, {{ now()->format('d F Y') }}</div>
+        <div class="block">Bank Sampah Desa Cau Blayu</div>
+        <div class="signature-space"></div>
+        <div class="block">Manajer</div>
+    </div>
 </div>
