@@ -2,29 +2,26 @@
     <form>
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="">
+                <div class="mb-4 text-center">
+                    @if ($id)
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Update Sampah</h3>
+                    @else
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Create Sampah</h3>
+                    @endif
+                </div>
                 <div class="mb-4">
                     <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Transaksi
                         ID</label>
                     <input type="text"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        readonly id="exampleFormControlInput1" placeholder="Enter Transaksi ID" wire:model="transaksi_id">
+                        readonly id="exampleFormControlInput1" placeholder="Enter Transaksi ID"
+                        wire:model="transaksi_id">
                     @error('transaksi_id')
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
                 @foreach ($sampahItems as $index => $item)
                     <div wire:key='sampah-item-{{ $index }}'></div>
-                    {{-- <div class="mb-4">
-                        <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Jenis
-                            Sampah</label>
-                        <input type="text"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="exampleFormControlInput1" placeholder="Enter Jenis Sampah"
-                            wire:model="sampahItems.{{ $index }}.jenis_sampah_id">
-                        @error('jenis_sampah')
-                            <span class="text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div> --}}
                     <div class="mb-4">
                         <label for="jenis_sampah" class="block text-gray-700 text-sm font-bold mb-2">Jenis
                             Sampah</label>

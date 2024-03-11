@@ -2,6 +2,13 @@
     <form>
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="">
+                <div class="mb-4 text-center">
+                    @if ($id)
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Update Penukaran</h3>
+                    @else
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Create Penukaran</h3>
+                    @endif
+                </div>
                 <div class="mb-4">
                     <label for="exampleFormControlInput4" class="block text-gray-700 text-sm font-bold mb-2">Nama
                         Nasabah</label>
