@@ -99,17 +99,17 @@ final class PenukaranTable extends PowerGridComponent
                 ->openModal('penukaran-form', ['rowId' => $row->id]);
         }
 
-        // if (auth()->user()->can('delete-penukaran')) {
-        //     $actions[] = Button::add('delete')
-        //         ->slot('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" class="w-5 h-5">
-        //         <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
-        //         <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-        //         </svg>
-        //         ')
-        //         ->id()
-        //         ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
-        //         ->dispatch('delete', ['rowId' => $row->id]);
-        // }
+        if (auth()->user()->can('delete-penukaran')) {
+            $actions[] = Button::add('delete')
+                ->slot('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" class="w-5 h-5">
+                <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+                <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.133 2.845a.75.75 0 0 1 1.06 0l1.72 1.72 1.72-1.72a.75.75 0 1 1 1.06 1.06l-1.72 1.72 1.72 1.72a.75.75 0 1 1-1.06 1.06L12 15.685l-1.72 1.72a.75.75 0 1 1-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>
+                ')
+                ->id()
+                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+                ->dispatch('delete', ['rowId' => $row->id]);
+        }
         return $actions;
     }
 
@@ -202,20 +202,15 @@ final class PenukaranTable extends PowerGridComponent
     {
         $penukaran = Penukaran::findOrFail($rowId);
         $tabungan = $penukaran->tabungan;
+        $keteranganPenukaran = 'Penukaran Barang - Penukaran #' . $penukaran->kode_penukaran;
 
-        $historyTabungan = HistoryTabungan::where('tabungan_id', $tabungan->id)
-            ->where('keterangan', 'Penukaran barang')
-            ->where('created_at', $penukaran->created_at)
-            ->first();
+        $tabungan->updateSaldo($penukaran->harga_barang, 'kredit', 'decrement', $keteranganPenukaran, true);
 
-        if ($historyTabungan) {
-            $tabungan->saldo += $historyTabungan->kredit;
-            $tabungan->save();
-
-            $historyTabungan->delete();
-        }
+        // Mengembalikan stok barang
+        $penukaran->barang->increment('stok_barang');
 
         $penukaran->delete();
-        $this->success('Penukaran berhasil dihapus dan saldo telah dikembalikan');
+        $this->success('Penukaran berhasil dihapus');
+        $this->success('Saldo berhasil dikembalikan');
     }
 }
