@@ -61,7 +61,7 @@ final class JenisSampahTable extends PowerGridComponent
             Column::make('Nama Jenis Sampah', 'nama_jenis')
                 ->searchable()
                 ->sortable(),
-            Column::make('Harga', 'harga')
+            Column::make('Harga (Kg)', 'harga')
                 ->searchable()
                 ->sortable(),
             Column::make('Status', 'status'),
