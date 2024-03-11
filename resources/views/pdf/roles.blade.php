@@ -1,27 +1,86 @@
-<div>
-    <h2>Tabel Roles</h2>
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
+<style>
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: auto;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .table th {
+        background-color: #f2f2f2;
+    }
+
+    .divider {
+        border-top: 1px solid #000;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .footer {
+        margin-top: 10px;
+        position: relative;
+    }
+
+    .signature-space {
+        height: 80px;
+    }
+
+    .footer-text {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .block {
+        display: block;
+    }
+</style>
+
+<div class="text-center">
+    <h2>Daftar Hak Akses</h2>
+</div>
+<div class="divider"></div>
+<div class="text-right">
+    <p>Tanggal Dibuat: {{ now()->format('d F Y') }}</p>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nama Hak Akses</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($datasource as $permission)
             <tr>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Id</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Nama</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Permissions</th>
-                <th style="border: 1px solid black; padding: 5px; text-align: left;">Created At</th>
+                <td>{{ $permission->id }}</td>
+                <td>{{ $permission->name }}</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($datasource as $roles)
-                <tr>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $roles->id }}</td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">{{ $roles->name }}</td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                        {{ $roles->permissions }}
-                    </td>
-                    <td style="border: 1px solid black; padding: 5px; text-align: left;">
-                        {{ $roles->created_at }}
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+        @endforeach
+    </tbody>
+</table>
+
+<div class="signature-space"></div>
+
+<div class="footer">
+    <div class="footer-text">
+        <div class="block">Cau Blayu, {{ now()->format('d F Y') }}</div>
+        <div class="block">Bank Sampah Desa Cau Blayu</div>
+        <div class="signature-space"></div>
+        <div class="block">Manajer</div>
+    </div>
 </div>

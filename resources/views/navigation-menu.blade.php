@@ -23,7 +23,7 @@
                         <span class="ml-4">Dashboard</span>
                     </x-nav-link>
                 </li>
-                @can('read-permissions')
+                {{-- @can('read-permissions')
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('permissions') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('permissions') }}" :active="request()->routeIs('permissions')"
@@ -36,7 +36,7 @@
                             <span class="ml-4">Permissions</span>
                         </x-nav-link>
                     </li>
-                @endcan
+                @endcan --}}
                 @can('read-roles')
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('roles') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
@@ -203,7 +203,7 @@
                         <span class="ml-4">Dashboard</span>
                     </x-nav-link>
                 </li>
-                @can('read-permissions')
+                {{-- @can('read-permissions')
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('permissions') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">
                         <x-nav-link href="{{ route('permissions') }}" :active="request()->routeIs('permissions')"
@@ -217,7 +217,7 @@
                             <span class="ml-4">Permissions</span>
                         </x-nav-link>
                     </li>
-                @endcan
+                @endcan --}}
                 @can('read-roles')
                     <li
                         class="relative px-6 py-3 {{ request()->routeIs('roles') ? 'bg-white' : 'text-white hover:text-white dark:hover:text-gray-200 dark:text-gray-100' }}">

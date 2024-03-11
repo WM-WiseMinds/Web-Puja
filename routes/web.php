@@ -38,9 +38,9 @@ Route::middleware([
         return view('dashboard', compact('userCount', 'sampahCount', 'barangCount', 'penukaranCount', 'nasabahCount', 'tabunganCount'));
     })->name('dashboard');
 
-    Route::get('/permissions', function () {
-        return view('permissions');
-    })->name('permissions');
+    // Route::get('/permissions', function () {
+    //     return view('permissions');
+    // })->name('permissions');
 
     Route::get('/roles', function () {
         return view('roles');
