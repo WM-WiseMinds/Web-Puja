@@ -47,26 +47,7 @@ final class TransaksiTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Transaksi::query()
-            ->with('sampah')
-            ->join('users', 'transaksi.user_id', '=', 'users.id')
-            ->join('nasabah', 'transaksi.nasabah_id', '=', 'nasabah.id')
-            ->join('users as nasabah_user', 'nasabah.user_id', '=', 'nasabah_user.id')
-            ->select([
-                'transaksi.id',
-                'transaksi.kode_transaksi',
-                'transaksi.user_id',
-                'transaksi.nasabah_id',
-                'transaksi.total_sampah',
-                'transaksi.total_harga',
-                'transaksi.status',
-                'transaksi.created_at',
-                'users.name as user_name',
-                'nasabah.user_id as nasabah_user_id',
-                'nasabah_user.name as name',
-                'nasabah.alamat as alamat',
-                'nasabah.no_hp as no_hp',
-            ]);
+        return Transaksi::query()->with(['nasabah', 'user']);
     }
 
     public function relationSearch(): array
@@ -84,8 +65,12 @@ final class TransaksiTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('kode_transaksi')
-            ->add('nasabah_user_id')
-            ->add('name')
+            ->add('user_id')
+            ->add('nasabah.user_id')
+            ->add('nasabah_id')
+            ->add('total_sampah')
+            ->add('total_harga')
+            ->add('nama_nasabah', fn ($row) => $row->nasabah->user->name)
             ->add('total_harga_formatted', fn (Transaksi $model) => 'Rp ' . number_format($model->total_harga_sampah, 0, ',', '.'))
             ->add('status')
             ->add('created_at_formatted', fn (Transaksi $model) => Carbon::parse($model->created_at)->format('d/m/Y'));
@@ -94,7 +79,7 @@ final class TransaksiTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Nama Nasabah', 'name'),
+            Column::make('Nama Nasabah', 'nama_nasabah'),
 
             Column::make('Total harga', 'total_harga_formatted', 'total_harga')
                 ->sortable()
@@ -114,9 +99,9 @@ final class TransaksiTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::select('name', 'nasabah.user_id')
-                ->dataSource(Transaksi::with('nasabah.user')->get()->map(function ($transaksi) {
-                    return ['id' => $transaksi->nasabah->user_id, 'name' => $transaksi->nasabah->user->name];
+            Filter::select('nama_nasabah', 'nasabah_id')
+                ->dataSource(Transaksi::with('nasabah')->get()->map(function ($transaksi) {
+                    return ['id' => $transaksi->nasabah_id, 'name' => $transaksi->nasabah->user->name];
                 })->unique('id'))
                 ->optionValue('id')
                 ->optionLabel('name'),

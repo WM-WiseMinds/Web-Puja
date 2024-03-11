@@ -44,15 +44,7 @@ final class UserTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return User::query()
-            ->join('roles', 'users.role_id', '=', 'roles.id')
-            ->select([
-                'users.id',
-                'users.name',
-                'users.email',
-                'users.status',
-                'roles.name as role_name',
-            ]);
+        return User::query()->with('role');
     }
 
 
@@ -69,7 +61,9 @@ final class UserTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('email')
-            ->add('role')
+            ->add('role', function ($row) {
+                return $row->role->name;
+            })
             ->add('status');
     }
 
@@ -84,7 +78,7 @@ final class UserTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Role', 'role_name')
+            Column::make('Role', 'role')
                 ->sortable(),
 
             Column::make('Status', 'status')
@@ -98,7 +92,7 @@ final class UserTable extends PowerGridComponent
     public function filters(): array
     {
         return [
-            Filter::select('role_name', 'role_id')
+            Filter::select('role', 'role_id')
                 ->dataSource(User::with('role')->get()->map(function ($user) {
                     return ['id' => $user->role_id, 'name' => $user->role->name];
                 })->unique('id'))

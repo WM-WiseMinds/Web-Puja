@@ -46,19 +46,7 @@ final class NasabahTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Nasabah::query()
-            ->join('users', 'nasabah.user_id', '=', 'users.id')
-            ->select([
-                'nasabah.id',
-                'nasabah.user_id',
-                'nasabah.alamat',
-                'nasabah.no_hp',
-                'nasabah.jenis_kelamin',
-                'nasabah.status',
-                'nasabah.foto',
-                'nasabah.created_at',
-                'users.name as name',
-            ]);
+        return Nasabah::query()->with('user');
     }
 
     public function relationSearch(): array
@@ -72,7 +60,9 @@ final class NasabahTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('name')
+            ->add('name', function ($row) {
+                return $row->user->name;
+            })
             ->add('no_hp')
             ->add('status');
     }
