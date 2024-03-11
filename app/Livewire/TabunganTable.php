@@ -46,13 +46,12 @@ final class TabunganTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        $tabungans = Tabungan::query()
-            ->with('historyTabungan')
-            ->join('nasabah', 'nasabah.id', '=', 'tabungan.nasabah_id')
-            ->join('users', 'users.id', '=', 'nasabah.user_id')
-            ->select('tabungan.*', 'users.name as nama');
+        $tabungans = Tabungan::query()->with('nasabah');
 
-        // Update the saldo for each Tabungan
+        if (auth()->user()->role->name == 'Nasabah') {
+            $tabungans->where('nasabah_id', auth()->user()->nasabah->id);
+        }
+
         foreach ($tabungans->get() as $tabungan) {
             $tabungan->updateSaldoTable();
         }
@@ -71,7 +70,9 @@ final class TabunganTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('nama')
+            ->add('nama', function (Tabungan $model) {
+                return $model->nasabah->user->name;
+            })
             ->add('saldo', fn (Tabungan $model) => 'Rp ' . number_format($model->saldo, 0, ',', '.'))
             ->add('status');
     }
