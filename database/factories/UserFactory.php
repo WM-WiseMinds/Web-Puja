@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
-            'role_id' => $this->faker->randomElement([1, 2, 3]),
+            'role_id' => 2,
             'status' => $this->faker->randomElement(['Aktif', 'Nonaktif']),
         ];
     }
