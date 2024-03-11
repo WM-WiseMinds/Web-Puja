@@ -16,11 +16,11 @@ return new class extends Migration
             // Kolom id akan digunakan sebagai primary key
             $table->id();
 
-            // Kolom transaksi_id akan digunakan sebagai foreign key untuk menghubung tabel sampah dengan tabel transaksi 
+            // Kolom transaksi_id akan digunakan sebagai foreign key untuk menghubung tabel sampah dengan tabel transaksi
             $table->foreignId('transaksi_id')->constrained('transaksi')->onDelete('cascade');
 
-            // Kolom jenis_sampah akan menyimpan jenis sampah (maksimal 50 karakter)
-            $table->string('jenis_sampah', 50);
+            // Kolom jenis_sampah_id akan digunakan sebagai foreign key untuk menghubung tabel sampah dengan tabel jenis_sampah
+            $table->foreignId('jenis_sampah_id')->constrained('jenis_sampah')->onDelete('cascade');
 
             // Kolom nama_sampah akan menyimpan nama sampah (maksimal 50 karakter)
             $table->string('nama_sampah', 50);
