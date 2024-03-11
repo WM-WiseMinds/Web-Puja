@@ -1,4 +1,4 @@
-<div class="flex h-screen bg-gray-50 dark:bg-gray-900" x-on:window="window.location.reload()">
+<div class="flex h-screen bg-gray-50 dark:bg-gray-900" x-on:sidebar-updated.window="window.location.reload()">
     <!-- Primary Navigation Menu -->
     <aside
         class="z-10 hidden w-64 overflow-y-auto bg-gradient-to-t from-emerald-700 to-emerald-600 dark:bg-gray-800 md:block flex-shrink-0">

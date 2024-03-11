@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\HistoryTabungan;
+use App\Models\JenisSampah;
 use App\Models\Sampah;
 use App\Models\Tabungan;
 use App\Models\Transaksi;
@@ -16,18 +17,19 @@ class SampahForm extends ModalComponent
     use Toastable;
 
     public Sampah $sampah;
-    public $id, $transaksi, $jenis_sampah, $nama_sampah, $harga_sampah, $jumlah_sampah, $transaksi_id;
+    public $id, $transaksi, $jenis_sampah, $jenis_sampah_id, $nama_sampah, $harga_sampah, $jumlah_sampah, $transaksi_id;
     public $sampahItems = [];
 
     public function mount($transaksi_id = null, $sampah_id = null)
     {
         $this->sampah = Sampah::findOrNew($sampah_id);
+        $this->jenis_sampah = JenisSampah::where('status', 'Aktif')->get();
         $this->transaksi_id = $transaksi_id ? $transaksi_id : $this->sampah->transaksi_id;
         $this->transaksi = Transaksi::find($this->transaksi_id);
         if ($this->sampah->exists) {
             $this->sampahItems = [
                 [
-                    'jenis_sampah' => $this->sampah->jenis_sampah,
+                    'jenis_sampah_id' => $this->sampah->jenis_sampah_id,
                     'nama_sampah' => $this->sampah->nama_sampah,
                     'harga_sampah' => $this->sampah->harga_sampah,
                     'jumlah_sampah' => $this->sampah->jumlah_sampah,
@@ -42,7 +44,7 @@ class SampahForm extends ModalComponent
     {
         return [
             'transaksi_id' => 'required|exists:transaksi,id',
-            'sampahItems.*.jenis_sampah' => 'required',
+            'sampahItems.*.jenis_sampah_id' => 'required|exists:jenis_sampah,id',
             'sampahItems.*.nama_sampah' => 'required',
             'sampahItems.*.harga_sampah' => 'required|numeric|min:0',
             'sampahItems.*.jumlah_sampah' => 'required|numeric|min:0',
@@ -51,7 +53,7 @@ class SampahForm extends ModalComponent
 
     public function addSampahItem()
     {
-        $this->sampahItems[] = ['jenis_sampah' => '', 'nama_sampah' => '', 'harga_sampah' => '', 'jumlah_sampah' => ''];
+        $this->sampahItems[] = ['jenis_sampah_id' => '', 'nama_sampah' => '', 'harga_sampah' => '', 'jumlah_sampah' => ''];
     }
 
     public function removeSampahItem($index)
@@ -60,11 +62,18 @@ class SampahForm extends ModalComponent
         $this->sampahItems = array_values($this->sampahItems);
     }
 
+    public function updateHargaSampah($index)
+    {
+        $jenisSampahId = $this->sampahItems[$index]['jenis_sampah_id'];
+        $jenisSampah = JenisSampah::find($jenisSampahId);
+        $this->sampahItems[$index]['harga_sampah'] = $jenisSampah->harga;
+    }
+
     public function resetForm()
     {
         $this->reset(['transaksi_id']);
         $this->sampah = new Sampah();
-        $this->sampahItems = [['jenis_sampah' => '', 'nama_sampah' => '', 'harga_sampah' => '', 'jumlah_sampah' => '']];
+        $this->sampahItems = [['jenis_sampah_id' => '', 'nama_sampah' => '', 'harga_sampah' => '', 'jumlah_sampah' => '']];
     }
 
     public function store()

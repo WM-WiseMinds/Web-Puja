@@ -56,7 +56,7 @@
             @foreach ($row->sampah as $sampah)
                 <tr>
                     <td class="border px-4 py-2">{{ $sampah->nama_sampah }}</td>
-                    <td class="border px-4 py-2">{{ $sampah->jenis_sampah }}</td>
+                    <td class="border px-4 py-2">{{ $sampah->jenisSampah->nama_jenis }}</td>
                     <td class="border px-4 py-2">{{ $sampah->jumlah_sampah }} Kg</td>
                     <td class="border px-4 py-2">Rp {{ number_format($sampah->harga_sampah, 0, ',', '.') }}</td>
                     <td class="border px-4 py-2">Rp

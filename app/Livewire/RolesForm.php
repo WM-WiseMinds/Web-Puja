@@ -56,11 +56,9 @@ class RolesForm extends ModalComponent
             RolesTable::class => 'rolesUpdated',
         ]);
 
-        $this->dispatch('sidebarUpdated');
-
         $this->resetCreateForm();
 
-        $this->dispatch('updated');
+        $this->dispatch('sidebar-updated');
     }
 
     public function mount($rowId = null)

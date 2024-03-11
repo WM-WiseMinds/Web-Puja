@@ -215,9 +215,9 @@ final class TabunganTable extends PowerGridComponent
 
             $tabungan->updateSaldo($jumlahPenarikan, 'kredit', 'decrement', $keteranganPenarikan);
 
-            $this->success('Data penarikan tabungan berhasil dihapus.');
+            $this->success('Penarikan tabungan berhasil dihapus.');
         } else {
-            $this->error('Data penarikan tabungan tidak ditemukan.');
+            $this->error('Penarikan tabungan tidak ditemukan.');
         }
     }
 }

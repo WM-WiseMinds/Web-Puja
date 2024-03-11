@@ -14,14 +14,30 @@
                 </div>
                 @foreach ($sampahItems as $index => $item)
                     <div wire:key='sampah-item-{{ $index }}'></div>
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">Jenis
                             Sampah</label>
                         <input type="text"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="exampleFormControlInput1" placeholder="Enter Jenis Sampah"
-                            wire:model="sampahItems.{{ $index }}.jenis_sampah">
+                            wire:model="sampahItems.{{ $index }}.jenis_sampah_id">
                         @error('jenis_sampah')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div> --}}
+                    <div class="mb-4">
+                        <label for="jenis_sampah" class="block text-gray-700 text-sm font-bold mb-2">Jenis
+                            Sampah</label>
+                        <select wire:model="sampahItems.{{ $index }}.jenis_sampah_id"
+                            wire:change="updateHargaSampah({{ $index }})"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="jenis_sampah">
+                            <option value="" readonly selected>Pilih Jenis Sampah</option>
+                            @foreach ($jenis_sampah as $jenis)
+                                <option value="{{ $jenis->id }}">{{ $jenis->nama_jenis }}</option>
+                            @endforeach
+                        </select>
+                        @error('jenis_kelamin')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -42,7 +58,7 @@
                         <input type="text"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="exampleFormControlInput1" placeholder="Enter Harga Sampah"
-                            wire:model="sampahItems.{{ $index }}.harga_sampah">
+                            wire:model="sampahItems.{{ $index }}.harga_sampah" readonly>
                         @error('harga_sampah')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
