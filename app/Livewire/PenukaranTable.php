@@ -57,6 +57,7 @@ final class PenukaranTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('kode_penukaran')
             ->add('nama_nasabah', fn ($row) => $row->tabungan->nasabah->user->name)
             ->add('nama_barang', fn ($row) => $row->barang->nama_barang)
             ->add('harga_barang', fn ($row) => 'Rp ' . number_format($row->harga_barang, 0, ',', '.'))
@@ -66,6 +67,7 @@ final class PenukaranTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+            Column::make('Kode Penukaran', 'kode_penukaran')->sortable(),
             Column::make('Nama Nasabah', 'nama_nasabah')->sortable()->searchable(),
             Column::make('Nama Barang', 'nama_barang')->sortable()->searchable(),
             Column::make('Harga Barang', 'harga_barang')->sortable()->searchable(),
