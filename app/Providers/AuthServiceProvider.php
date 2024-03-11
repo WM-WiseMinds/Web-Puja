@@ -142,6 +142,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role->permissions->pluck('slug')->contains('delete-jenis-sampah');
         });
 
+        Gate::define('export-jenis-sampah', function (User $user) {
+            return $user->role->permissions->pluck('slug')->contains('export-jenis-sampah');
+        });
+
         Gate::define('create-sampah', function (User $user) {
             return $user->role->permissions->pluck('slug')->contains('create-sampah');
         });

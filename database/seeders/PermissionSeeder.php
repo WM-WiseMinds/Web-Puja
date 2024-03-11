@@ -49,6 +49,7 @@ class PermissionSeeder extends Seeder
             'Read Jenis Sampah',
             'Update Jenis Sampah',
             'Delete Jenis Sampah',
+            'Export Jenis Sampah',
             'Create Sampah',
             'Read Sampah',
             'Update Sampah',
