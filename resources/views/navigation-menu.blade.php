@@ -5,7 +5,7 @@
         <div class="py-6 text-white dark:text-gray-400 text-center">
             <div class="mx-5">
                 <a href="{{ route('dashboard') }}" class="text-lg font-bold text-white dark:text-gray-200">
-                    SISTEM BANK SAMPAH CAU BlAYU
+                    SISTEM BANK SAMPAH CAU BLAYU
                 </a>
             </div>
             <ul class="mt-6">
@@ -185,7 +185,7 @@
 
         <div class="py-4 text-gray-500 text-center">
             <a href="{{ route('dashboard') }}" class="mx-5 text-lg font-bold text-white dark:text-gray-200">
-                SISTEM BANK SAMPAH CAU BlAYU
+                SISTEM BANK SAMPAH CAU BLAYU
             </a>
             {{-- <ul class="mt-6">
                 <li class="relative px-6 py-3">
