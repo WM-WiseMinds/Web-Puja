@@ -2,6 +2,10 @@
     <table class="table-auto w-full">
         <tbody>
             <tr>
+                <td class="border px-4 py-2 text-sm font-semibold">Kode Transaksi</td>
+                <td class="border px-4 py-2">{{ $row->kode_transaksi }}</td>
+            </tr>
+            <tr>
                 <td class="border px-4 py-2 text-sm font-semibold">Nama Nasabah</td>
                 <td class="border px-4 py-2">{{ $row->nasabah->user->name }}</td>
             </tr>
@@ -14,15 +18,11 @@
                 <td class="border px-4 py-2">{{ $row->nasabah->no_hp }}</td>
             </tr>
             <tr>
-                <td class="border px-4 py-2 text-sm font-semibold">Total Sampah</td>
-                <td class="border px-4 py-2">{{ $row->total_jumlah_sampah }}</td>
+                <td class="border px-4 py-2 text-sm font-semibold">Total Sampah (Kg)</td>
+                <td class="border px-4 py-2">{{ $row->total_jumlah_sampah }} Kg</td>
             </tr>
             <tr>
-                <td class="border px-4 py-2 text-sm font-semibold">Total Berat</td>
-                <td class="border px-4 py-2">{{ $row->total_berat }}</td>
-            </tr>
-            <tr>
-                <td class="border px-4 py-2 text-sm font-semibold">Total Harga</td>
+                <td class="border px-4 py-2 text-sm font-semibold">Total Harga Keseluruhan</td>
                 <td class="border px-4 py-2">Rp {{ number_format($row->total_harga_sampah, 0, ',', '.') }}</td>
             </tr>
             <tr>
@@ -46,9 +46,10 @@
             <tr>
                 <th class="border px-4 py-2 text-sm font-semibold">Nama Sampah</th>
                 <th class="border px-4 py-2 text-sm font-semibold">Jenis Sampah</th>
-                <th class="border px-4 py-2 text-sm font-semibold">Jumlah Sampah</th>
+                <th class="border px-4 py-2 text-sm font-semibold">Jumlah Sampah (Kg)</th>
                 <th class="border px-4 py-2 text-sm font-semibold">Harga Sampah</th>
-                <th class="border px-4 py-2 text-sm font-semibold">Action</th> <!-- Add this line -->
+                <th class="border px-4 py-2 text-sm font-semibold">Total Harga</th>
+                <th class="border px-4 py-2 text-sm font-semibold">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -56,9 +57,11 @@
                 <tr>
                     <td class="border px-4 py-2">{{ $sampah->nama_sampah }}</td>
                     <td class="border px-4 py-2">{{ $sampah->jenis_sampah }}</td>
-                    <td class="border px-4 py-2">{{ $sampah->jumlah_sampah }}</td>
+                    <td class="border px-4 py-2">{{ $sampah->jumlah_sampah }} Kg</td>
                     <td class="border px-4 py-2">Rp {{ number_format($sampah->harga_sampah, 0, ',', '.') }}</td>
-                    <td class="border px-4 py-2"> <!-- Add this cell -->
+                    <td class="border px-4 py-2">Rp
+                        {{ number_format($sampah->jumlah_sampah * $sampah->harga_sampah, 0, ',', '.') }}</td>
+                    <td class="border px-4 py-2">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                             onclick="Livewire.dispatch('openModal', { component: 'sampah-form', arguments: { sampah_id: {{ $sampah->id }} } })"><svg
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"

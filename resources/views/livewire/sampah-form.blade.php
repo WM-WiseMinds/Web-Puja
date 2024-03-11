@@ -58,16 +58,18 @@
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="mb-4">
+                        <button type="button" wire:click.prevent="removeSampahItem({{ $index }})"
+                            class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-red-600 text-base font-bold text-white hover:bg-red-700 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150">
+                            Remove Sampah
+                        </button>
+                    </div>
                 @endforeach
                 <div class="mb-4">
                     <button type="button" wire:click.prevent="addSampahItem"
                         class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150">
                         Add Sampah Item
                     </button>
-                    {{-- <button type="button" wire:click.prevent="removeSampahItem({{ $index }})"
-                        class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150">
-                        Remove Sampah Item
-                    </button> --}}
                 </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
