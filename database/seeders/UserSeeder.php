@@ -14,27 +14,30 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(30)->create();
-
         $admin = User::factory()->create([
-            'name' => 'admin',
+            'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('Password'),
             'role_id' => 1,
+            'status' => 'Aktif',
         ]);
 
         $nasabah = User::factory()->create([
-            'name' => 'nasabah',
+            'name' => 'Nasabah',
             'email' => 'nasabah@example.com',
             'password' => Hash::make('Password'),
             'role_id' => 2,
+            'status' => 'Aktif',
         ]);
 
         $manager = User::factory()->create([
-            'name' => 'manager',
+            'name' => 'Manager',
             'email' => 'manager@example.com',
             'password' => Hash::make('Password'),
             'role_id' => 3,
+            'status' => 'Aktif',
         ]);
+
+        User::factory(30)->create();
     }
 }
