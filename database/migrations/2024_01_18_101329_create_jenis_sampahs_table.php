@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('jenis_sampah', function (Blueprint $table) {
             // Menambahkan kolom 'id' sebagai primary key
             $table->id();
-            // Menambahkan kolom 'jenis_sample' dengan tipe data string dan panjang maksimum 128 karakter
-            $table->string('jenis_sampah', 128);
+            // Menambahkan kolom 'nama_jenis' dengan tipe data string dan panjang maksimum 128 karakter
+            $table->string('nama_jenis', 128);
             // Menambahkan kolom 'harga' dengan tipe data integer
             $table->integer('harga');
             // Menambahkan kolom 'status' dengan tipe data enum
