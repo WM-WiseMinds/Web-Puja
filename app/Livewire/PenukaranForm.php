@@ -15,94 +15,118 @@ class PenukaranForm extends ModalComponent
     use Toastable;
 
     public Penukaran $penukaran;
-    public $tabungan, $barang, $tabungan_id, $barang_id, $saldo, $harga;
+    public $id, $tabungan, $barang, $tabungan_id, $barang_id, $saldo, $harga_barang, $kode_penukaran;
 
-    protected $rules = [
-        'tabungan_id' => 'required|exists:tabungan,id',
-        'barang_id' => 'required|exists:barang,id',
-    ];
-
-    public function render()
+    public function mount($rowId = null)
     {
-        $tabungan = Tabungan::with('nasabah.user')->get();
-        $barang = Barang::where('status', 'Aktif')->get();
-        return view('livewire.penukaran-form', compact('tabungan', 'barang'));
+        $this->penukaran = Penukaran::findOrNew($rowId);
+        $this->tabungan = Tabungan::where('status', 'aktif')->get();
+        $this->barang = Barang::where('status', 'aktif')->where('stok_barang', '>', 0)->get();
+        $this->id = $this->penukaran->id;
+        $this->tabungan_id = $this->penukaran->tabungan_id;
+        $this->barang_id = $this->penukaran->barang_id;
+        $this->saldo = $rowId ? $this->penukaran->tabungan->saldo : '';
+        $this->harga_barang = $this->penukaran->harga_barang;
     }
 
-    public function resetCreateForm()
+    public function generateKodePenukaran()
     {
-        $this->reset(['tabungan_id', 'barang_id']);
+        $prefix = 'TKR';
+        $length = 8;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        do {
+            $kodePenukaran = $prefix;
+            for ($i = 0; $i < $length; $i++) {
+                $kodePenukaran .= $characters[rand(0, strlen($characters) - 1)];
+            }
+        } while (Penukaran::where('kode_penukaran', $kodePenukaran)->exists());
+
+        return $kodePenukaran;
+    }
+
+    public function updateSaldo()
+    {
+        $tabungan = Tabungan::find($this->tabungan_id);
+        $this->saldo = $tabungan->saldo;
+    }
+
+    public function updateHarga()
+    {
+        $barang = Barang::find($this->barang_id);
+        $this->harga_barang = $barang->harga_barang;
+    }
+
+    public function rules()
+    {
+        return [
+            'tabungan_id' => 'required|exists:tabungan,id',
+            'barang_id' => 'required|exists:barang,id',
+            'harga_barang' => 'required|numeric|min:0',
+        ];
+    }
+
+    public function resetForm()
+    {
+        $this->reset('tabungan_id', 'barang_id', 'saldo', 'harga_barang', 'kode_penukaran');
     }
 
     public function store()
     {
         $validatedData = $this->validate();
-        if (!$this->validateData()) {
-            // $this->error('Saldo tidak cukup untuk melakukan penukaran');
-            return;
-        }
 
-        $barang = Barang::find($this->barang_id);
-        $this->penukaran->fill($validatedData);
-        $this->penukaran->harga_barang_saat_tukar = $barang->harga_barang;
-        $this->penukaran->save();
-        $this->success($this->penukaran->wasRecentlyCreated ? 'Penukaran berhasil ditambahkan' : 'Penukaran berhasil diubah');
-
-        // Kurangi stok barang
-        $barang->stok_barang -= 1;
-        $barang->save();
-
-        $tabungan = Tabungan::find($this->penukaran->tabungan_id);
-        $harga = $this->penukaran->barang->harga_barang;
-        $created_at = $this->penukaran->created_at;
-
-        $historyTabungan = HistoryTabungan::where('tabungan_id', $tabungan->id)
-            ->where('keterangan', 'Penukaran barang')
-            ->where('created_at', $created_at)
-            ->first();
-
-        if ($historyTabungan) {
-            $historyTabungan->kredit = $harga;
-            $historyTabungan->save();
-        } else {
-            $tabungan->createSaldo($harga, 'kredit', 'Penukaran barang');
-        }
-
-        $this->success('Saldo berhasil dikurangi');
-
-        $this->closeModalWithEvents([
-            PenukaranTable::class => 'penukaranUpdated'
-        ]);
-
-        $this->resetCreateForm();
-    }
-
-    public function mount($rowId = null)
-    {
-        $this->barang = Barang::where('status', 'Aktif')->get();
-        $this->tabungan = Tabungan::with('nasabah.user')->where('status', 'Aktif')->get();
-        $this->penukaran = $rowId ? Penukaran::find($rowId) : new Penukaran;
-        if ($this->penukaran->exists) {
-            $this->tabungan_id = $this->penukaran->tabungan_id;
-            $this->barang_id = $this->penukaran->barang_id;
-        }
-    }
-
-    public function validateData()
-    {
         $tabungan = Tabungan::find($this->tabungan_id);
         $barang = Barang::find($this->barang_id);
 
         if ($tabungan->saldo < $barang->harga_barang) {
-            $this->error('Saldo tidak cukup untuk melakukan penukaran');
-            return false;
+            $this->error('Saldo tabungan tidak mencukupi');
+            return;
         }
 
-        if ($barang->stok_barang <= 0) {
-            $this->error('Barang yang dipilih sedang kosong');
-            return false;
+        if (!$this->penukaran->exists) {
+            $validatedData['kode_penukaran'] = $this->generateKodePenukaran();
         }
 
-        return true;
+        $penukaranSebelumnya = $this->penukaran->replicate();
+        $this->penukaran = Penukaran::updateOrCreate(['id' => $this->id], $validatedData);
+
+        if ($penukaranSebelumnya->exists && $penukaranSebelumnya->barang_id !== $this->barang_id) {
+            $barangSebelumnya = $penukaranSebelumnya->barang;
+            $barangSebelumnya->increment('stok_barang');
+
+            $keteranganPenukaranSebelumnya = 'Penukaran Barang - Penukaran #' . $penukaranSebelumnya->kode_penukaran;
+            $historyTabunganSebelumnya = HistoryTabungan::where('tabungan_id', $tabungan->id)
+                ->where('keterangan', $keteranganPenukaranSebelumnya)
+                ->first();
+
+            if ($historyTabunganSebelumnya) {
+                $historyTabunganSebelumnya->delete();
+            }
+        }
+
+        $barang->decrement('stok_barang');
+
+        $keteranganPenukaran = 'Penukaran Barang - Penukaran #' . $this->penukaran->kode_penukaran;
+        $historyTabungan = HistoryTabungan::where('tabungan_id', $tabungan->id)
+            ->where('keterangan', $keteranganPenukaran)
+            ->first();
+
+        if ($historyTabungan) {
+            $historyTabungan->kredit = $this->harga_barang;
+            $historyTabungan->save();
+        } else {
+            $tabungan->updateSaldo($this->harga_barang, 'kredit', 'increment', $keteranganPenukaran);
+        }
+
+        $this->success('Penukaran barang berhasil dilakukan');
+        $this->closeModalWithEvents([
+            PenukaranTable::class => 'penukaranUpdated',
+        ]);
+        $this->resetForm();
+    }
+
+    public function render()
+    {
+        return view('livewire.penukaran-form');
     }
 }

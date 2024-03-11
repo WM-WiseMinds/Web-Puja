@@ -16,9 +16,11 @@ class BarangFactory extends Factory
      */
     public function definition(): array
     {
+        static $counter = 1;
+
         return [
-            'nama_barang' => $this->faker->word,
-            'harga_barang' => $this->faker->randomNumber(5),
+            'nama_barang' => 'Barang ' . chr(64 + $counter++),
+            'harga_barang' => $this->faker->randomNumber(3) * 100,
             'stok_barang' => $this->faker->randomNumber(2),
             'gambar_barang' => $this->faker->imageUrl(),
             'keterangan' => $this->faker->text,
