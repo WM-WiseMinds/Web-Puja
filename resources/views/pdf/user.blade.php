@@ -59,7 +59,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Nama Pengguna</th>
             <th>Email</th>
             <th>Peran</th>
@@ -69,7 +68,6 @@
     <tbody>
         @foreach ($datasource as $user)
             <tr>
-                <td>{{ $user->id }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->role->name }}</td>

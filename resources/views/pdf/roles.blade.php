@@ -59,7 +59,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Nama Peran</th>
             <th>Daftar Izin</th>
         </tr>
@@ -67,7 +66,6 @@
     <tbody>
         @foreach ($datasource as $role)
             <tr>
-                <td>{{ $role->id }}</td>
                 <td>{{ $role->name }}</td>
                 <td>
                     {{ implode(', ', $role->permissions->pluck('name')->toArray()) }}

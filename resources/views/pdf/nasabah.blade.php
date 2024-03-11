@@ -59,7 +59,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Nama Nasabah</th>
             <th>Alamat</th>
             <th>Telepon</th>
@@ -70,7 +69,6 @@
     <tbody>
         @foreach ($datasource as $nasabah)
             <tr>
-                <td>{{ $nasabah->id }}</td>
                 <td>{{ $nasabah->user->name }}</td>
                 <td>{{ $nasabah->alamat }}</td>
                 <td>{{ $nasabah->no_hp }}</td>

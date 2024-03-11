@@ -59,7 +59,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Nama Jenis Sampah</th>
             <th>Harga</th>
             <th>Status</th>
@@ -68,7 +67,6 @@
     <tbody>
         @foreach ($datasource as $jenis_sampah)
             <tr>
-                <td>{{ $jenis_sampah->id }}</td>
                 <td>{{ $jenis_sampah->nama_jenis }}</td>
                 <td>Rp {{ number_format($jenis_sampah->harga, 0, ',', '.') }}</td>
                 <td>{{ $jenis_sampah->status }}</td>
