@@ -72,8 +72,8 @@
             <tr>
                 <td>{{ $transaksi->kode_transaksi }}</td>
                 <td>{{ $transaksi->nasabah->user->name }}</td>
-                <td>{{ $transaksi->total_sampah }}</td>
-                <td>{{ $transaksi->total_harga }}</td>
+                <td>{{ $transaksi->total_jumlah_sampah }} Kg</td>
+                <td>Rp {{ number_format($transaksi->total_harga_sampah, 0, ',', '.') }}</td>
                 <td>{{ $transaksi->created_at }}</td>
                 <td>{{ $transaksi->status }}</td>
             </tr>
