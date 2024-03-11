@@ -95,28 +95,13 @@ class PenukaranForm extends ModalComponent
             $barangSebelumnya->increment('stok_barang');
 
             $keteranganPenukaranSebelumnya = 'Penukaran Barang - Penukaran #' . $penukaranSebelumnya->kode_penukaran;
-            $historyTabunganSebelumnya = HistoryTabungan::where('tabungan_id', $tabungan->id)
-                ->where('keterangan', $keteranganPenukaranSebelumnya)
-                ->first();
-
-            if ($historyTabunganSebelumnya) {
-                $historyTabunganSebelumnya->delete();
-            }
+            $tabungan->updateHargaBarangPenukaran($keteranganPenukaranSebelumnya, $this->harga_barang);
+        } else {
+            $keteranganPenukaran = 'Penukaran Barang - Penukaran #' . $this->penukaran->kode_penukaran;
+            $tabungan->updateHargaBarangPenukaran($keteranganPenukaran, $this->harga_barang);
         }
 
         $barang->decrement('stok_barang');
-
-        $keteranganPenukaran = 'Penukaran Barang - Penukaran #' . $this->penukaran->kode_penukaran;
-        $historyTabungan = HistoryTabungan::where('tabungan_id', $tabungan->id)
-            ->where('keterangan', $keteranganPenukaran)
-            ->first();
-
-        if ($historyTabungan) {
-            $historyTabungan->kredit = $this->harga_barang;
-            $historyTabungan->save();
-        } else {
-            $tabungan->updateSaldo($this->harga_barang, 'kredit', 'increment', $keteranganPenukaran);
-        }
 
         $this->success('Penukaran barang berhasil dilakukan');
         $this->closeModalWithEvents([

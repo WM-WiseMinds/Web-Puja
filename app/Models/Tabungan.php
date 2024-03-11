@@ -98,19 +98,17 @@ class Tabungan extends Model
         $this->updateSaldoTable();
     }
 
-    public function createSaldo(
-        $jumlah,
-        $jenis = 'debit',
-        $keterangan = ''
-    ) {
-        if ($jumlah != 0) {
-            // Membuat record baru di tabel history_tabungan jika jumlah tidak 0
-            $historyTabungan = new HistoryTabungan();
-            $historyTabungan->tabungan_id = $this->id;
-            $historyTabungan->debit = $jenis === 'debit' ? $jumlah : 0;
-            $historyTabungan->kredit = $jenis === 'kredit' ? $jumlah : 0;
-            $historyTabungan->keterangan = $keterangan;
+    public function updateHargaBarangPenukaran($keteranganPenukaran, $hargaBarangBaru)
+    {
+        $historyTabungan = HistoryTabungan::where('tabungan_id', $this->id)
+            ->where('keterangan', $keteranganPenukaran)
+            ->first();
+
+        if ($historyTabungan) {
+            $historyTabungan->kredit = $hargaBarangBaru;
             $historyTabungan->save();
+        } else {
+            $this->updateSaldo($hargaBarangBaru, 'kredit', 'increment', $keteranganPenukaran);
         }
     }
 }
