@@ -45,7 +45,15 @@ final class PenukaranTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Penukaran::query()->with(['tabungan', 'barang']);
+        $query = Penukaran::query()->with(['tabungan', 'barang']);
+
+        if (auth()->user()->role->name == 'Nasabah') {
+            $query->whereHas('tabungan', function ($query) {
+                $query->where('nasabah_id', auth()->user()->nasabah->id);
+            });
+        }
+
+        return $query;
     }
 
     public function relationSearch(): array
