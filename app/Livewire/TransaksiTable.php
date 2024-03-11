@@ -47,7 +47,15 @@ final class TransaksiTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Transaksi::query()->with(['nasabah', 'user']);
+        $query = Transaksi::query()->with(['nasabah', 'user']);
+
+        // Check if the currently logged in user is a Nasabah
+        if (auth()->user()->role->name == 'Nasabah') {
+            // Filter the Transaksi to only include those related to the currently logged in user
+            $query->where('nasabah_id', auth()->user()->nasabah->id);
+        }
+
+        return $query;
     }
 
     public function relationSearch(): array

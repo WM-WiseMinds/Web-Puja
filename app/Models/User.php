@@ -24,7 +24,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
-    // protected $table di gunakan untuk menyimpan nama tabel yang sesuai dalam basis data;     
+    // protected $table di gunakan untuk menyimpan nama tabel yang sesuai dalam basis data;
 
     //  protected $fillable di gunakan untuk menyimpan atribut yang ada pada tabel user
     protected $fillable = [
@@ -79,13 +79,8 @@ class User extends Authenticatable
         return $this->belongsTo(Roles::class, 'role_id');
     }
 
-    // Relasi antara model User dengan model Admin (Satu user memiliki satu admin)
-    public function admin()
-    {
-        //hasOne digunakan karena relasi yang di tuju oleh user adalah tabel Admin bisa di bilang relasi antara model Admin dengan model User adalah One To one
-        return $this->hasOne(Admin::class);
-    }
-    // Relasi antara model User dengan model Nasabah (Satu user memiliki satu nasabah)    
+
+    // Relasi antara model User dengan model Nasabah (Satu user memiliki satu nasabah)
     public function nasabah()
     {
         //hasOne digunakan karena relasi yang di mulai oleh user yang akan dituju pada tabel Nasabah bisa di bilang relasi antara model Nasabah dengan model User adalah One To one
