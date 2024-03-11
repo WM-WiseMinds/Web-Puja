@@ -49,7 +49,7 @@ final class JenisSampahTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('jenis_sampah')
+            ->add('nama_jenis')
             ->add('harga', fn (JenisSampah $model) => 'Rp ' . number_format($model->harga, 0, ',', '.'))
             ->add('status')
             ->add('created_at');
@@ -58,7 +58,7 @@ final class JenisSampahTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Jenis Sampah', 'jenis_sampah')
+            Column::make('Nama Jenis Sampah', 'nama_jenis')
                 ->searchable()
                 ->sortable(),
             Column::make('Harga', 'harga')

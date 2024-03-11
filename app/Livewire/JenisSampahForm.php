@@ -34,7 +34,7 @@ class JenisSampahForm extends ModalComponent
 
     public function resetForm()
     {
-        $this->reset(['nama_jenis_sampah', 'harga', 'status']);
+        $this->reset(['nama_jenis', 'harga', 'status']);
     }
 
     public function store()

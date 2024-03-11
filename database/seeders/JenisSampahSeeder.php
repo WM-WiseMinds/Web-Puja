@@ -23,7 +23,7 @@ class JenisSampahSeeder extends Seeder
 
         foreach ($jenisSampah as $jenis) {
             JenisSampah::create([
-                'jenis_sampah' => $jenis,
+                'nama_jenis' => $jenis,
                 'harga' => rand(1000, 10000),
                 'status' => 'Aktif',
             ]);
