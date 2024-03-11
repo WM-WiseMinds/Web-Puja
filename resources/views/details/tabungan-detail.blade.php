@@ -1,18 +1,6 @@
 <div class="p-2 bg-white border border-slate-200">
-    {{-- @php
-        $saldo = intval($row->saldo);
-        foreach ($row->historyTabungan as $historyTabungan) {
-            $debit = intval($historyTabungan->debit);
-            $kredit = intval($historyTabungan->kredit);
-            $saldo = $saldo + $debit - $kredit;
-        }
-    @endphp --}}
     <table class="table-auto w-full">
         <tbody>
-            <tr>
-                <td class="border px-4 py-2 text-sm font-semibold">Id</td>
-                <td class="border px-4 py-2">{{ $id }}</td>
-            </tr>
             <tr>
                 <td class="border px-4 py-2 text-sm font-semibold">Nama Nasabah</td>
                 <td class="border px-4 py-2">{{ $row->nasabah->user->name }}</td>

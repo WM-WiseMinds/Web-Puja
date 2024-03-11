@@ -66,7 +66,6 @@ final class BarangTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')->sortable(),
             Column::make('Nama barang', 'nama_barang')
                 ->sortable()
                 ->searchable(),

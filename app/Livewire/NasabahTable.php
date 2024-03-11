@@ -80,7 +80,6 @@ final class NasabahTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')->sortable(),
             Column::make('Nama', 'name'),
 
             Column::make('No Hp', 'no_hp')

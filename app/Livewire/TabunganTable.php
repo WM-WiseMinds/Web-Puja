@@ -79,7 +79,6 @@ final class TabunganTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')->sortable(),
             Column::make('Nama Nasabah', 'nama')->sortable()->searchable(),
 
             Column::make('Saldo', 'saldo')

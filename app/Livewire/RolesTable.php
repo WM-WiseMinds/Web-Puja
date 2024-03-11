@@ -64,7 +64,6 @@ final class RolesTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')->sortable(),
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
