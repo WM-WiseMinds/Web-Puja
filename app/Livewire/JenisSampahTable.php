@@ -24,15 +24,20 @@ final class JenisSampahTable extends PowerGridComponent
     {
         $this->showCheckBox();
 
-        return [
-            Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+        $setUp = [
             Header::make()->showSearchInput(),
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
         ];
+
+        if (auth()->check() && auth()->user()->can('export-jenis-sampah')) {
+            $setUp[] = Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV);
+        }
+
+        return $setUp;
     }
 
     public function datasource(): Builder
